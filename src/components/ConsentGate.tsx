@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,13 +37,19 @@ function storeConsent() {
 }
 
 export function ConsentGate({ children }: ConsentGateProps) {
-  const [hasConsent, setHasConsent] = useState(() => !!getStoredConsent());
+  const [hasConsent, setHasConsent] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [checks, setChecks] = useState({
     educational: false,
     ownData: false,
     aiProcessing: false,
     termsAgreed: false,
   });
+
+  useEffect(() => {
+    setHasConsent(!!getStoredConsent());
+    setMounted(true);
+  }, []);
 
   const allChecked = checks.educational && checks.ownData && checks.aiProcessing && checks.termsAgreed;
 
@@ -58,6 +64,10 @@ export function ConsentGate({ children }: ConsentGateProps) {
     storeConsent();
     setHasConsent(true);
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   if (hasConsent) {
     return <>{children}</>;
