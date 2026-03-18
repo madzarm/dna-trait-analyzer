@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "What to Do With Your 23andMe Raw Data in 2026",
@@ -21,32 +24,40 @@ export const metadata: Metadata = {
 
 export default function WhatToDoWith23andMeRawDataPage() {
   return (
-    <article className="space-y-6">
+    <article className="space-y-8">
       <Link
         href="/blog"
-        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
       >
-        &larr; Back to Blog
+        <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
+        Back to Blog
       </Link>
 
-      <header className="space-y-2">
-        <p className="text-sm text-muted-foreground">March 15, 2026</p>
-        <h1 className="text-3xl font-bold tracking-tight">
+      <header className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="text-[10px] text-primary border-primary/20 font-mono uppercase tracking-wider">
+            Guide
+          </Badge>
+          <span className="text-xs text-muted-foreground font-mono">March 15, 2026</span>
+          <span className="text-xs text-muted-foreground/40">&middot;</span>
+          <span className="text-xs text-muted-foreground font-mono">6 min read</span>
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
           What to Do With Your 23andMe Raw Data in 2026
         </h1>
       </header>
 
-      <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+      <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
         <p>
           If you&apos;ve taken a 23andMe test, you probably explored your
           ancestry composition and maybe a few health predisposition reports.
           But your raw DNA data file contains{" "}
-          <strong>over 600,000 genetic markers</strong> — and 23andMe only
+          <strong className="text-foreground">over 600,000 genetic markers</strong> — and 23andMe only
           reports on a small fraction of them. The rest of your genetic
           information is sitting unused, waiting to be explored.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           What Is 23andMe Raw Data?
         </h2>
         <p>
@@ -64,23 +75,23 @@ export default function WhatToDoWith23andMeRawDataPage() {
           predispositions, carrier status, and pharmacogenomics.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           How to Download Your Raw Data
         </h2>
         <p>Downloading your raw data from 23andMe is straightforward:</p>
-        <ol className="list-decimal list-inside space-y-1 ml-4">
+        <ol className="list-decimal list-inside space-y-1.5 ml-4">
           <li>Log in to your 23andMe account</li>
           <li>
-            Navigate to <strong>Settings</strong> (click your name in the top
+            Navigate to <strong className="text-foreground">Settings</strong> (click your name in the top
             right)
           </li>
           <li>
-            Scroll down to <strong>23andMe Data</strong> and select{" "}
-            <strong>Download Raw Data</strong>
+            Scroll down to <strong className="text-foreground">23andMe Data</strong> and select{" "}
+            <strong className="text-foreground">Download Raw Data</strong>
           </li>
           <li>Complete the identity verification step</li>
           <li>
-            Download the zip file and extract the <code>.txt</code> file inside
+            Download the zip file and extract the <code className="font-mono text-primary/80 bg-primary/5 px-1.5 py-0.5 rounded">.txt</code> file inside
           </li>
         </ol>
         <p>
@@ -89,7 +100,7 @@ export default function WhatToDoWith23andMeRawDataPage() {
           and contains sensitive genetic information.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           What Can You Learn From It?
         </h2>
         <p>
@@ -97,30 +108,30 @@ export default function WhatToDoWith23andMeRawDataPage() {
           23andMe&apos;s standard reports cover. With the right tools, you can
           explore:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            <strong>Pharmacogenomics:</strong> How you metabolize specific
+            <strong className="text-foreground">Pharmacogenomics:</strong> How you metabolize specific
             medications (e.g., caffeine, warfarin, statins)
           </li>
           <li>
-            <strong>Nutrigenomics:</strong> Genetic factors in vitamin
+            <strong className="text-foreground">Nutrigenomics:</strong> Genetic factors in vitamin
             metabolism, lactose tolerance, and dietary sensitivities
           </li>
           <li>
-            <strong>Carrier status:</strong> Whether you carry variants
+            <strong className="text-foreground">Carrier status:</strong> Whether you carry variants
             associated with inherited conditions
           </li>
           <li>
-            <strong>Athletic traits:</strong> Muscle fiber composition,
+            <strong className="text-foreground">Athletic traits:</strong> Muscle fiber composition,
             endurance capacity, and injury predisposition
           </li>
           <li>
-            <strong>Physical traits:</strong> Eye color, hair texture, taste
+            <strong className="text-foreground">Physical traits:</strong> Eye color, hair texture, taste
             perception, and more
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           Third-Party Tools for Raw Data Analysis
         </h2>
         <p>
@@ -138,7 +149,7 @@ export default function WhatToDoWith23andMeRawDataPage() {
           can&apos;t.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           Analyzing Your Raw Data With DNA Trait Analyzer
         </h2>
         <p>
@@ -156,16 +167,16 @@ export default function WhatToDoWith23andMeRawDataPage() {
           trait.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           Important Considerations
         </h2>
         <p>
           Regardless of which tool you use, keep these points in mind when
           exploring your raw genetic data:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            Raw data analysis is for <strong>educational purposes</strong> —
+            Raw data analysis is for <strong className="text-foreground">educational purposes</strong> —
             not medical diagnosis
           </li>
           <li>
@@ -186,8 +197,9 @@ export default function WhatToDoWith23andMeRawDataPage() {
           </li>
         </ul>
 
-        <div className="rounded-lg border bg-muted/30 p-6 mt-6 space-y-3">
-          <p className="font-semibold text-foreground">
+        {/* CTA card */}
+        <div className="rounded-xl border border-primary/15 bg-primary/[0.03] p-6 mt-8 space-y-3">
+          <p className="font-semibold text-foreground font-display">
             Ready to explore your 23andMe data?
           </p>
           <p>
@@ -195,11 +207,11 @@ export default function WhatToDoWith23andMeRawDataPage() {
             your file, ask about any trait, and get an AI-powered analysis in
             minutes.
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm font-medium text-primary hover:underline underline-offset-2"
-          >
-            Try DNA Trait Analyzer &rarr;
+          <Link href="/">
+            <Button className="rounded-full font-display cursor-pointer mt-2" size="sm">
+              Try DNA Trait Analyzer
+              <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            </Button>
           </Link>
         </div>
       </div>

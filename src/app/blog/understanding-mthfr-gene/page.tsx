@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Understanding Your MTHFR Gene Variants: A Complete Guide",
@@ -21,22 +24,30 @@ export const metadata: Metadata = {
 
 export default function UnderstandingMthfrGenePage() {
   return (
-    <article className="space-y-6">
+    <article className="space-y-8">
       <Link
         href="/blog"
-        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
       >
-        &larr; Back to Blog
+        <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
+        Back to Blog
       </Link>
 
-      <header className="space-y-2">
-        <p className="text-sm text-muted-foreground">March 5, 2026</p>
-        <h1 className="text-3xl font-bold tracking-tight">
+      <header className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="text-[10px] text-primary border-primary/20 font-mono uppercase tracking-wider">
+            Research
+          </Badge>
+          <span className="text-xs text-muted-foreground font-mono">March 5, 2026</span>
+          <span className="text-xs text-muted-foreground/40">&middot;</span>
+          <span className="text-xs text-muted-foreground font-mono">10 min read</span>
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
           Understanding Your MTHFR Gene Variants: A Complete Guide
         </h1>
       </header>
 
-      <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+      <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
         <p>
           MTHFR is one of the most discussed genes in the personal genetics
           community. Searches for &quot;MTHFR gene&quot; and &quot;MTHFR
@@ -47,36 +58,36 @@ export default function UnderstandingMthfrGenePage() {
           their health implications.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           What Does the MTHFR Gene Do?
         </h2>
         <p>
-          MTHFR stands for <strong>methylenetetrahydrofolate reductase</strong>.
+          MTHFR stands for <strong className="text-foreground">methylenetetrahydrofolate reductase</strong>.
           It&apos;s an enzyme that plays a key role in folate (vitamin B9)
           metabolism. Specifically, MTHFR converts 5,10-methylenetetrahydrofolate
           into 5-methyltetrahydrofolate — the active form of folate that your
-          body uses for a critical process called <strong>methylation</strong>.
+          body uses for a critical process called <strong className="text-foreground">methylation</strong>.
         </p>
         <p>
           Methylation is involved in hundreds of biochemical reactions,
           including:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            <strong>DNA synthesis and repair:</strong> Methylation is essential
+            <strong className="text-foreground">DNA synthesis and repair:</strong> Methylation is essential
             for creating and maintaining DNA
           </li>
           <li>
-            <strong>Homocysteine metabolism:</strong> Active folate helps
+            <strong className="text-foreground">Homocysteine metabolism:</strong> Active folate helps
             convert homocysteine back to methionine, keeping homocysteine levels
             in check
           </li>
           <li>
-            <strong>Neurotransmitter production:</strong> Folate metabolism
+            <strong className="text-foreground">Neurotransmitter production:</strong> Folate metabolism
             supports the synthesis of serotonin, dopamine, and norepinephrine
           </li>
           <li>
-            <strong>Detoxification:</strong> Methylation assists in processing
+            <strong className="text-foreground">Detoxification:</strong> Methylation assists in processing
             and eliminating various compounds from the body
           </li>
         </ul>
@@ -87,32 +98,32 @@ export default function UnderstandingMthfrGenePage() {
           or two copies.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           The Two Common MTHFR Variants
         </h2>
         <p>
           Two MTHFR variants are well-studied and commonly discussed:
         </p>
 
-        <h3 className="text-base font-semibold text-foreground pt-1">
-          C677T (rs1801133)
+        <h3 className="text-base font-semibold text-foreground pt-2 font-display">
+          C677T (<span className="font-mono text-primary">rs1801133</span>)
         </h3>
         <p>
           This is the more impactful of the two variants. The &quot;T&quot;
           allele produces a thermolabile (heat-sensitive) version of the enzyme
           with reduced activity:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            <strong>CC genotype (wild type):</strong> Normal enzyme activity —
+            <strong className="text-foreground">CC genotype (wild type):</strong> Normal enzyme activity —
             approximately 100%
           </li>
           <li>
-            <strong>CT genotype (heterozygous):</strong> Moderately reduced
+            <strong className="text-foreground">CT genotype (heterozygous):</strong> Moderately reduced
             activity — approximately 65% of normal
           </li>
           <li>
-            <strong>TT genotype (homozygous):</strong> Significantly reduced
+            <strong className="text-foreground">TT genotype (homozygous):</strong> Significantly reduced
             activity — approximately 30% of normal
           </li>
         </ul>
@@ -124,33 +135,33 @@ export default function UnderstandingMthfrGenePage() {
           populations.
         </p>
 
-        <h3 className="text-base font-semibold text-foreground pt-1">
-          A1298C (rs1801131)
+        <h3 className="text-base font-semibold text-foreground pt-2 font-display">
+          A1298C (<span className="font-mono text-primary">rs1801131</span>)
         </h3>
         <p>
           This variant has a milder effect on enzyme function than C677T:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            <strong>AA genotype (wild type):</strong> Normal enzyme activity
+            <strong className="text-foreground">AA genotype (wild type):</strong> Normal enzyme activity
           </li>
           <li>
-            <strong>AC genotype (heterozygous):</strong> Mildly reduced
+            <strong className="text-foreground">AC genotype (heterozygous):</strong> Mildly reduced
             activity
           </li>
           <li>
-            <strong>CC genotype (homozygous):</strong> Moderately reduced
+            <strong className="text-foreground">CC genotype (homozygous):</strong> Moderately reduced
             activity — roughly 60-70% of normal
           </li>
         </ul>
         <p>
-          Being <strong>compound heterozygous</strong> — carrying one copy of
+          Being <strong className="text-foreground">compound heterozygous</strong> — carrying one copy of
           C677T and one copy of A1298C — is also common and can result in
           enzyme activity reduction similar to being homozygous for one
           variant alone.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           What the Research Actually Says
         </h2>
         <p>
@@ -159,24 +170,24 @@ export default function UnderstandingMthfrGenePage() {
         </p>
         <ul className="list-disc list-inside space-y-2 ml-4">
           <li>
-            <strong>Elevated homocysteine:</strong> The most consistent finding.
+            <strong className="text-foreground">Elevated homocysteine:</strong> The most consistent finding.
             The TT genotype at C677T is associated with higher homocysteine
             levels, particularly when folate intake is low. Elevated
             homocysteine is a risk factor for cardiovascular disease.
           </li>
           <li>
-            <strong>Neural tube defects:</strong> Maternal TT genotype has been
+            <strong className="text-foreground">Neural tube defects:</strong> Maternal TT genotype has been
             associated with a modestly increased risk of neural tube defects in
             offspring. This is one reason folic acid supplementation is
             recommended during pregnancy.
           </li>
           <li>
-            <strong>Cardiovascular risk:</strong> Meta-analyses show a modest
+            <strong className="text-foreground">Cardiovascular risk:</strong> Meta-analyses show a modest
             association between the TT genotype and cardiovascular events, but
             the effect size is small and depends heavily on folate status.
           </li>
           <li>
-            <strong>Mental health:</strong> Some studies have found associations
+            <strong className="text-foreground">Mental health:</strong> Some studies have found associations
             between C677T and depression risk, but results are inconsistent and
             effect sizes are small.
           </li>
@@ -189,13 +200,13 @@ export default function UnderstandingMthfrGenePage() {
           &quot;disease&quot; or that you need special treatment.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           How to Check Your MTHFR Status
         </h2>
         <p>
           If you have raw DNA data from a consumer testing service (23andMe,
           AncestryDNA, MyHeritage, or FTDNA), your MTHFR variants are almost
-          certainly included — rs1801133 (C677T) and rs1801131 (A1298C) are
+          certainly included — <span className="font-mono text-primary/80">rs1801133</span> (C677T) and <span className="font-mono text-primary/80">rs1801131</span> (A1298C) are
           standard SNPs on all major genotyping chips.
         </p>
         <p>
@@ -206,40 +217,40 @@ export default function UnderstandingMthfrGenePage() {
           population frequencies.
         </p>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           What to Do If You Have a Variant
         </h2>
         <p>
           If you discover you carry one or both MTHFR variants, here are some
           evidence-based considerations:
         </p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
+        <ul className="list-disc list-inside space-y-1.5 ml-4">
           <li>
-            <strong>Don&apos;t panic.</strong> These variants are extremely
+            <strong className="text-foreground">Don&apos;t panic.</strong> These variants are extremely
             common and most carriers have no health issues related to them
           </li>
           <li>
-            <strong>Ensure adequate folate intake</strong> through diet (leafy
+            <strong className="text-foreground">Ensure adequate folate intake</strong> through diet (leafy
             greens, legumes, fortified foods) or supplementation as recommended
             by your healthcare provider
           </li>
           <li>
-            <strong>Consider a homocysteine blood test</strong> if you&apos;re
+            <strong className="text-foreground">Consider a homocysteine blood test</strong> if you&apos;re
             TT at C677T — this is the most actionable clinical measurement
           </li>
           <li>
-            <strong>Talk to your doctor</strong> if you&apos;re planning a
+            <strong className="text-foreground">Talk to your doctor</strong> if you&apos;re planning a
             pregnancy, have a family history of cardiovascular disease, or have
             concerns about homocysteine levels
           </li>
           <li>
-            <strong>Be skeptical</strong> of websites selling expensive
+            <strong className="text-foreground">Be skeptical</strong> of websites selling expensive
             &quot;MTHFR protocols&quot; or supplement stacks — the evidence
             base for most of these products is thin
           </li>
         </ul>
 
-        <h2 className="text-xl font-semibold text-foreground pt-2">
+        <h2 className="text-xl font-semibold text-foreground pt-4 font-display">
           Important Disclaimer
         </h2>
         <p>
@@ -250,8 +261,9 @@ export default function UnderstandingMthfrGenePage() {
           health decisions based on your genetic data.
         </p>
 
-        <div className="rounded-lg border bg-muted/30 p-6 mt-6 space-y-3">
-          <p className="font-semibold text-foreground">
+        {/* CTA card */}
+        <div className="rounded-xl border border-primary/15 bg-primary/[0.03] p-6 mt-8 space-y-3">
+          <p className="font-semibold text-foreground font-display">
             Check your MTHFR status
           </p>
           <p>
@@ -259,11 +271,11 @@ export default function UnderstandingMthfrGenePage() {
             FTDNA and ask about your MTHFR variants. Get an AI-powered analysis
             with evidence ratings and research citations.
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm font-medium text-primary hover:underline underline-offset-2"
-          >
-            Try DNA Trait Analyzer &rarr;
+          <Link href="/">
+            <Button className="rounded-full font-display cursor-pointer mt-2" size="sm">
+              Try DNA Trait Analyzer
+              <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            </Button>
           </Link>
         </div>
       </div>
