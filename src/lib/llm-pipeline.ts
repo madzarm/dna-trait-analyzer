@@ -2,6 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { SNPAssociation, SNPMatch, AnalysisResult, EvidenceStrength } from "./types";
 import type { SNPData } from "./types";
 import { batchLookupSNPs, formatSNPediaContext } from "./snpedia";
+import { batchLookupClinVar, formatClinVarContext } from "./clinvar";
+import { batchLookupGWAS, formatGWASContext } from "./gwas-catalog";
 
 const anthropic = new Anthropic();
 
@@ -12,11 +14,18 @@ type ProgressCallback = (event: {
   snpCount?: number;
 }) => void;
 
+export interface PipelineOptions {
+  /** When true, excludes SNPedia (CC BY-NC-SA) and uses only public domain sources (ClinVar, GWAS Catalog) */
+  useCommercialSources?: boolean;
+}
+
 export async function runAnalysisPipeline(
   trait: string,
   dnaMap: Map<string, SNPData>,
-  onProgress: ProgressCallback
+  onProgress: ProgressCallback,
+  options: PipelineOptions = {}
 ): Promise<AnalysisResult> {
+  const { useCommercialSources = false } = options;
   // Step 1: Research trait and find associated SNPs
   onProgress({
     type: "progress",
@@ -62,31 +71,85 @@ export async function runAnalysisPipeline(
     message: `Found ${matches.length} of ${associations.length} SNPs in your DNA data`,
   });
 
-  // Step 3: Fetch SNPedia data for matched SNPs
-  onProgress({
-    type: "progress",
-    phase: "snpedia",
-    message: "Looking up SNPedia for detailed genotype data...",
-  });
-
+  // Step 3: Fetch reference data from multiple sources
   const allRsids = associations.map((a) => a.rsid);
-  const snpediaData = await batchLookupSNPs(allRsids);
 
-  const snpediaFoundCount = snpediaData.size;
-  if (snpediaFoundCount > 0) {
-    onProgress({
-      type: "progress",
-      phase: "snpedia",
-      message: `Retrieved SNPedia data for ${snpediaFoundCount} of ${allRsids.length} SNPs`,
-    });
-  }
-
-  // Build user genotype map for SNPedia context formatting
+  // Build user genotype map for context formatting
   const userGenotypes = new Map<string, string>();
   for (const match of matches) {
     userGenotypes.set(match.rsid.toLowerCase(), match.userGenotype);
   }
-  const snpediaContext = formatSNPediaContext(snpediaData, userGenotypes);
+
+  // Fetch from all enabled sources in parallel
+  let snpediaContext = "";
+  let clinvarContext = "";
+  let gwasContext = "";
+
+  const fetchPromises: Promise<void>[] = [];
+
+  // SNPedia: only if NOT in commercial mode (CC BY-NC-SA license)
+  if (!useCommercialSources) {
+    onProgress({
+      type: "progress",
+      phase: "snpedia",
+      message: "Looking up SNPedia for detailed genotype data...",
+    });
+
+    fetchPromises.push(
+      batchLookupSNPs(allRsids).then((snpediaData) => {
+        if (snpediaData.size > 0) {
+          onProgress({
+            type: "progress",
+            phase: "snpedia",
+            message: `Retrieved SNPedia data for ${snpediaData.size} of ${allRsids.length} SNPs`,
+          });
+          snpediaContext = formatSNPediaContext(snpediaData, userGenotypes);
+        }
+      })
+    );
+  }
+
+  // ClinVar: always enabled (public domain)
+  onProgress({
+    type: "progress",
+    phase: "clinvar",
+    message: "Querying ClinVar for clinical variant data...",
+  });
+
+  fetchPromises.push(
+    batchLookupClinVar(allRsids).then((clinvarData) => {
+      if (clinvarData.size > 0) {
+        onProgress({
+          type: "progress",
+          phase: "clinvar",
+          message: `Retrieved ClinVar data for ${clinvarData.size} of ${allRsids.length} SNPs`,
+        });
+        clinvarContext = formatClinVarContext(clinvarData, userGenotypes);
+      }
+    })
+  );
+
+  // GWAS Catalog: always enabled (open access)
+  onProgress({
+    type: "progress",
+    phase: "gwas",
+    message: "Querying GWAS Catalog for study associations...",
+  });
+
+  fetchPromises.push(
+    batchLookupGWAS(allRsids).then((gwasData) => {
+      if (gwasData.size > 0) {
+        onProgress({
+          type: "progress",
+          phase: "gwas",
+          message: `Retrieved GWAS Catalog data for ${gwasData.size} of ${allRsids.length} SNPs`,
+        });
+        gwasContext = formatGWASContext(gwasData, userGenotypes);
+      }
+    })
+  );
+
+  await Promise.all(fetchPromises);
 
   // Step 4: Interpret results
   onProgress({
@@ -95,7 +158,14 @@ export async function runAnalysisPipeline(
     message: "Generating your personalized genetic report...",
   });
 
-  const result = await interpretResults(trait, matches, associations, snpediaContext);
+  const result = await interpretResults(
+    trait,
+    matches,
+    associations,
+    snpediaContext,
+    clinvarContext,
+    gwasContext
+  );
 
   return result;
 }
@@ -283,7 +353,9 @@ async function interpretResults(
   trait: string,
   matches: SNPMatch[],
   allAssociations: SNPAssociation[],
-  snpediaContext: string
+  snpediaContext: string,
+  clinvarContext: string,
+  gwasContext: string
 ): Promise<AnalysisResult> {
   const notFound = allAssociations.filter(
     (a) => !matches.find((m) => m.rsid === a.rsid)
@@ -291,6 +363,14 @@ async function interpretResults(
 
   const snpediaSection = snpediaContext
     ? `\n\n## SNPedia Reference Data (authoritative source — use this to validate and enrich your analysis)\n${snpediaContext}`
+    : "";
+
+  const clinvarSection = clinvarContext
+    ? `\n\n## ClinVar Clinical Data (NCBI public domain — authoritative for clinical significance)\n${clinvarContext}`
+    : "";
+
+  const gwasSection = gwasContext
+    ? `\n\n## GWAS Catalog Data (EBI open access — authoritative for study-level associations)\n${gwasContext}`
     : "";
 
   const response = await anthropic.messages.create({
@@ -308,28 +388,31 @@ ${JSON.stringify(matches, null, 2)}
 
 SNPs researched but not found in the user's DNA chip:
 ${notFound.map((a) => `${a.rsid} (${a.gene}, evidence: ${a.evidenceStrength})`).join(", ") || "None"}
-${snpediaSection}
+${snpediaSection}${clinvarSection}${gwasSection}
 
 CRITICAL INSTRUCTIONS:
 1. EVIDENCE WEIGHTING: Each SNP has an "evidenceStrength" field and "effectSize". Weight findings proportionally — strong-evidence SNPs drive conclusions, preliminary ones get caveats.
-2. SNPEDIA DATA: The SNPedia section above contains real genotype-specific interpretations, magnitude scores, and population frequencies fetched directly from SNPedia. USE THIS DATA as your primary reference — it includes the exact interpretation for the user's specific genotype (marked with "← USER'S GENOTYPE"). The SNPedia magnitude score (0-10) indicates clinical significance: >3 is notable, >5 is significant. Prefer SNPedia's genotype descriptions over generic associations.
-3. If SNPedia data contradicts or refines the initial research, trust SNPedia — it is a curated, peer-reviewed database.
-4. HAPLOTYPE AWARENESS: Some SNPs in the same gene are in strong linkage disequilibrium and form haplotypes (e.g., TAS2R38 PAV/AVI, APOE e2/e3/e4). When multiple SNPs from the same gene appear, analyze them TOGETHER as a haplotype — do NOT treat each one independently. Explain the combined haplotype meaning, not conflicting per-SNP signals.
-5. CLEAR BOTTOM LINE: The summary MUST give a direct, unambiguous answer to "what does this mean for me?" — e.g., "You are likely a medium bitter taster" not "you have mixed signals." If the evidence is genuinely mixed, say so clearly but still give the most likely interpretation. Users should not have to reconcile contradictory statements themselves.
+2. SNPEDIA DATA: If present, the SNPedia section contains real genotype-specific interpretations, magnitude scores, and population frequencies. USE THIS DATA as a primary reference — it includes the exact interpretation for the user's specific genotype (marked with "← USER'S GENOTYPE"). The SNPedia magnitude score (0-10) indicates clinical significance: >3 is notable, >5 is significant. Prefer SNPedia's genotype descriptions over generic associations.
+3. CLINVAR DATA: If present, the ClinVar section contains NCBI's authoritative clinical significance classifications and condition associations. Pay attention to the star rating (0-4 stars) — higher stars mean more review. ClinVar is the gold standard for clinical variant interpretation.
+4. GWAS CATALOG DATA: If present, the GWAS Catalog section contains study-level associations with p-values, effect sizes, and sample sizes from published genome-wide association studies. Use this to validate effect sizes and assess evidence strength. Genome-wide significant findings (p<5e-8) from large studies (N>10,000) are highly reliable.
+5. CROSS-SOURCE VALIDATION: When multiple sources provide information about the same SNP, cross-reference them. If sources agree, increase confidence. If sources disagree, note the discrepancy and weight by source authority (ClinVar stars > large GWAS > SNPedia magnitude > small studies). Flag any contradictions explicitly.
+6. If any curated database (SNPedia, ClinVar) contradicts or refines the initial research, trust the curated source.
+7. HAPLOTYPE AWARENESS: Some SNPs in the same gene are in strong linkage disequilibrium and form haplotypes (e.g., TAS2R38 PAV/AVI, APOE e2/e3/e4). When multiple SNPs from the same gene appear, analyze them TOGETHER as a haplotype — do NOT treat each one independently. Explain the combined haplotype meaning, not conflicting per-SNP signals.
+8. CLEAR BOTTOM LINE: The summary MUST give a direct, unambiguous answer to "what does this mean for me?" — e.g., "You are likely a medium bitter taster" not "you have mixed signals." If the evidence is genuinely mixed, say so clearly but still give the most likely interpretation. Users should not have to reconcile contradictory statements themselves.
 
 Based on the genotypes found, provide an educational analysis. Output ONLY a JSON object:
 
 {
   "summary": "A 2-3 sentence plain-language summary. Start with a CLEAR VERDICT — what the user's DNA most likely means for this trait in plain terms. Then add the key supporting evidence.",
-  "confidence": <number 0-100 factoring coverage, evidence quality, AND SNPedia magnitude scores>,
-  "interpretation": "A detailed 2-3 paragraph explanation. When multiple SNPs are in the same gene, explain the haplotype first, then the individual SNPs as supporting detail. For each SNP, use SNPedia's genotype-specific description where available. Mention magnitude scores and population frequencies when relevant. Be specific about effect sizes. End with a practical 'what this means in daily life' sentence.",
-  "sources": ["list of research sources — include PMIDs from SNPedia where available"]
+  "confidence": <number 0-100 factoring coverage, evidence quality, SNPedia magnitude scores, ClinVar star ratings, and GWAS p-values/sample sizes>,
+  "interpretation": "A detailed 2-3 paragraph explanation. When multiple SNPs are in the same gene, explain the haplotype first, then the individual SNPs as supporting detail. For each SNP, use genotype-specific descriptions from SNPedia/ClinVar where available. Reference ClinVar clinical significance and GWAS effect sizes. Mention magnitude scores, star ratings, and population frequencies when relevant. Note when multiple sources agree or disagree. End with a practical 'what this means in daily life' sentence.",
+  "sources": ["list of research sources — include PMIDs from SNPedia, ClinVar IDs, and GWAS study accessions where available"]
 }
 
 Rules:
 - Be scientifically accurate but accessible
 - ALWAYS give a clear bottom-line answer, not wishy-washy hedging
-- Use SNPedia's exact genotype interpretations as the ground truth
+- Use curated database interpretations (SNPedia, ClinVar) as ground truth over generic associations
 - Analyze linked SNPs as haplotypes, not independently
 - Clearly distinguish strong vs weak evidence
 - Note that most traits are influenced by many genes AND environment

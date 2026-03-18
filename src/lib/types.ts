@@ -39,6 +39,36 @@ export interface AnalysisResult {
   sources: string[];
 }
 
+export interface ClinVarData {
+  rsid: string;
+  variantId: string;
+  gene: string;
+  clinicalSignificance: string;
+  conditions: ClinVarCondition[];
+  reviewStatus: string;
+  starRating: number;
+  citations: string[];
+}
+
+export interface ClinVarCondition {
+  name: string;
+  clinicalSignificance: string;
+  lastEvaluated?: string;
+}
+
+export interface GWASAssociation {
+  rsid: string;
+  gene: string;
+  trait: string;
+  pValue: number;
+  effectSize: string;
+  riskAllele: string;
+  studyId: string;
+  pubmedId: string;
+  sampleSize: number;
+  ancestries: string[];
+}
+
 export interface UploadResult {
   sessionId: string;
   snpCount: number;
@@ -50,4 +80,5 @@ export interface ProgressEvent {
   message?: string;
   snpCount?: number;
   data?: AnalysisResult;
+  reportId?: string;
 }
