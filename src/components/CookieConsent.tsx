@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Cookie } from "lucide-react";
 
 const COOKIE_CONSENT_KEY = "dna-trait-analyzer-cookie-consent";
 
@@ -29,27 +30,39 @@ export function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-sm" data-slot="cookie-consent">
-      <div className="rounded-xl border bg-card/95 backdrop-blur-md shadow-xl p-5 space-y-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          We use essential cookies to make this site work. With your consent, we
-          may also use analytics cookies to improve the service. See our{" "}
-          <Link
-            href="/legal/privacy"
-            className="text-primary underline underline-offset-2 hover:text-primary/80"
+    <div
+      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm animate-fade-in-up"
+      data-slot="cookie-consent"
+    >
+      <div className="rounded-2xl border border-border/50 bg-card/95 backdrop-blur-xl shadow-2xl p-5 space-y-3">
+        <div className="flex items-start gap-3">
+          <div className="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+            <Cookie className="h-4 w-4 text-accent" />
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            We use essential cookies to make this site work. Analytics cookies are
+            optional.{" "}
+            <Link
+              href="/legal/privacy"
+              className="text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              Privacy Policy
+            </Link>
+          </p>
+        </div>
+        <div className="flex items-center gap-2 pl-11">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDecline}
+            className="text-muted-foreground hover:text-foreground text-xs h-8 px-3 cursor-pointer"
           >
-            Privacy Policy
-          </Link>{" "}
-          for details.
-        </p>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleDecline} className="flex-1">
             Decline
           </Button>
           <Button
             size="sm"
             onClick={handleAccept}
-            className="flex-1 bg-primary hover:bg-primary/90"
+            className="text-xs h-8 px-4 rounded-full cursor-pointer"
           >
             Accept
           </Button>
