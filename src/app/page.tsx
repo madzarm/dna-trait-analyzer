@@ -87,9 +87,11 @@ export default function Home() {
           </div>
 
           {/* Upload / Consent — preserved functionality */}
-          <ConsentGate>
-            <UploadDropzone onUploadComplete={handleUploadComplete} />
-          </ConsentGate>
+          <div className="relative z-10">
+            <ConsentGate>
+              <UploadDropzone onUploadComplete={handleUploadComplete} />
+            </ConsentGate>
+          </div>
         </div>
 
         {/* Scroll indicator */}
