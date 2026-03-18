@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dna, ArrowRight, Mail } from "lucide-react";
 
 function GoogleIcon() {
   return (
@@ -90,155 +90,188 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="font-display text-2xl text-center">
-              Check Your Email
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <p className="text-muted-foreground">
-              We&apos;ve sent a confirmation link to <strong>{email}</strong>.
-              Please check your inbox and click the link to activate your
-              account.
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+        {/* Atmospheric background */}
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="absolute top-[30%] left-[20%] h-[400px] w-[400px] rounded-full blur-[140px] bg-primary opacity-[0.06]"
+          />
+          <div className="absolute inset-0 hero-grid opacity-50" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "radial-gradient(ellipse at 50% 50%, transparent 0%, var(--background) 70%)",
+            }}
+          />
+        </div>
+
+        <div className="w-full max-w-md space-y-8 animate-fade-in-up text-center">
+          <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+            <Mail className="h-7 w-7 text-primary" />
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+              Check your email
+            </h1>
+            <p className="text-muted-foreground leading-relaxed">
+              We&apos;ve sent a confirmation link to{" "}
+              <strong className="text-foreground font-mono text-sm">{email}</strong>.
+              Click the link to activate your account and start exploring.
             </p>
-            <Link
-              href="/auth/login"
-              className="text-sm text-primary hover:underline"
-            >
-              Back to sign in
-            </Link>
-          </CardContent>
-        </Card>
+          </div>
+
+          <Link
+            href="/auth/login"
+            className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+          >
+            Back to sign in
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left branded panel — hidden on mobile */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-surface-sunken items-center justify-center overflow-hidden">
-        {/* Gradient mesh background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-hero-glow" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-primary/5 blur-3xl animate-hero-glow" style={{ animationDelay: "5s" }} />
-        </div>
-        <div className="relative z-10 text-center space-y-4 px-12">
-          <h1 className="font-display text-4xl font-bold tracking-tight">
-            DNA Trait Analyzer
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-md mx-auto">
-            Discover what your genes say about you with AI-powered analysis backed by published research.
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+      {/* Atmospheric background */}
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute top-[20%] right-[15%] h-[500px] w-[500px] rounded-full blur-[140px] bg-primary opacity-[0.05] animate-hero-glow"
+        />
+        <div
+          className="absolute bottom-[20%] left-[10%] h-[400px] w-[400px] rounded-full blur-[120px] bg-accent opacity-[0.04] animate-hero-glow"
+          style={{ animationDelay: "7s" }}
+        />
+        {/* Subtle grid */}
+        <div className="absolute inset-0 hero-grid opacity-50" />
+        {/* Vignette */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse at 50% 50%, transparent 0%, var(--background) 70%)",
+          }}
+        />
       </div>
 
-      {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-8">
-          {/* Mobile-only wordmark */}
-          <div className="lg:hidden text-center">
-            <h1 className="font-display text-2xl font-bold tracking-tight">
-              DNA Trait Analyzer
-            </h1>
-          </div>
+      <div className="w-full max-w-md space-y-10 animate-fade-in-up">
+        {/* Wordmark */}
+        <Link href="/" className="inline-flex items-center gap-2 group">
+          <Dna className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform" />
+          <span className="text-sm font-semibold font-display tracking-tight text-foreground">
+            DNA Trait Analyzer
+          </span>
+        </Link>
 
-          <div className="space-y-2 text-center">
-            <h2 className="font-display text-2xl font-bold">Create Account</h2>
-            <p className="text-sm text-muted-foreground">Start exploring your genetic profile</p>
-          </div>
-
-          <div className="space-y-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-12"
-              onClick={handleGoogleSignup}
-              disabled={googleLoading}
-            >
-              <GoogleIcon />
-              <span className="ml-2">
-                {googleLoading ? "Redirecting..." : "Continue with Google"}
-              </span>
-            </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  or
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <form onSubmit={handleSignup} className="space-y-5">
-            <div className="space-y-2">
-              <label htmlFor="fullName" className="text-sm font-medium block">
-                Full Name
-              </label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="Your name"
-                className="h-12"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium block">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                className="h-12"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium block">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="At least 6 characters"
-                className="h-12"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all"
-              disabled={loading}
-            >
-              {loading ? "Creating account..." : "Create Account"}
-            </Button>
-          </form>
-
-          <p className="text-sm text-center text-muted-foreground">
-            Already have an account?{" "}
-            <Link href="/auth/login" className="text-primary hover:underline">
-              Sign in
-            </Link>
+        {/* Left-aligned header: mono label + large heading */}
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+            Get started
+          </p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+            Create your account
+          </h1>
+          <p className="text-sm text-muted-foreground pt-1">
+            Begin uncovering what your DNA says about you.
           </p>
         </div>
+
+        {/* Google OAuth */}
+        <div className="space-y-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-12 rounded-full font-display border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all"
+            onClick={handleGoogleSignup}
+            disabled={googleLoading}
+          >
+            <GoogleIcon />
+            <span className="ml-2">
+              {googleLoading ? "Redirecting..." : "Continue with Google"}
+            </span>
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border/30" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-3 text-muted-foreground/60 font-mono tracking-wider">
+                or
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Email form */}
+        <form onSubmit={handleSignup} className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="fullName" className="text-xs font-medium text-muted-foreground uppercase tracking-wider font-mono block">
+              Full Name
+            </label>
+            <Input
+              id="fullName"
+              type="text"
+              placeholder="Your name"
+              className="h-12 bg-surface-sunken/50 border-border/30 focus:border-primary/40 transition-colors"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wider font-mono block">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              className="h-12 bg-surface-sunken/50 border-border/30 focus:border-primary/40 transition-colors"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider font-mono block">
+              Password
+            </label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="At least 6 characters"
+              className="h-12 bg-surface-sunken/50 border-border/30 focus:border-primary/40 transition-colors"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+            />
+          </div>
+
+          {error && (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full h-12 rounded-full font-display bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all"
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : "Create Account"}
+            {!loading && <ArrowRight className="h-4 w-4 ml-2" />}
+          </Button>
+        </form>
+
+        {/* Footer link */}
+        <p className="text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link href="/auth/login" className="text-primary hover:text-primary/80 font-medium transition-colors">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );
