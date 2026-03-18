@@ -5,16 +5,29 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/AuthProvider";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dna } from "lucide-react";
+import { Dna, ArrowRight, FileText, Share2 } from "lucide-react";
 import type { Report } from "@/lib/supabase/types";
 
 function confidenceColor(confidence: number): string {
-  if (confidence >= 0.75) return "bg-primary"; // teal
-  if (confidence >= 0.5) return "bg-amber-400"; // amber
-  if (confidence >= 0.25) return "bg-orange-500"; // orange
-  return "bg-red-500"; // red
+  if (confidence >= 70) return "bg-primary";
+  if (confidence >= 40) return "bg-amber-400";
+  if (confidence >= 20) return "bg-orange-500";
+  return "bg-red-500";
+}
+
+function confidenceLabel(confidence: number): string {
+  if (confidence >= 70) return "High";
+  if (confidence >= 40) return "Moderate";
+  if (confidence >= 20) return "Low";
+  return "Very Low";
+}
+
+function confidenceTextColor(confidence: number): string {
+  if (confidence >= 70) return "text-primary";
+  if (confidence >= 40) return "text-amber-400";
+  if (confidence >= 20) return "text-orange-500";
+  return "text-red-500";
 }
 
 export default function ReportsPage() {
@@ -48,8 +61,11 @@ export default function ReportsPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="max-w-3xl mx-auto p-6 py-12">
-        <div className="text-center text-muted-foreground">Loading...</div>
+      <div className="max-w-3xl mx-auto p-6 py-20">
+        <div className="flex items-center justify-center gap-3 text-muted-foreground">
+          <Dna className="h-5 w-5 animate-spin text-primary" />
+          <span className="text-sm font-mono">Loading reports...</span>
+        </div>
       </div>
     );
   }
@@ -57,72 +73,109 @@ export default function ReportsPage() {
   if (!user) return null;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 py-8 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold">My Reports</h1>
-          <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-secondary text-secondary-foreground">
-            {reports.length}
-          </span>
+    <div className="max-w-3xl mx-auto px-6 py-12 md:py-16 space-y-8">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+            Your Library
+          </p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+              Reports
+            </h1>
+            {reports.length > 0 && (
+              <span className="text-sm text-muted-foreground/50 font-mono tabular-nums">
+                {reports.length}
+              </span>
+            )}
+          </div>
         </div>
         <Link href="/">
-          <Button className="bg-primary hover:bg-primary/90">New Analysis</Button>
+          <Button className="rounded-full font-display cursor-pointer" size="sm">
+            New Analysis
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Button>
         </Link>
       </div>
 
       {reports.length === 0 ? (
-        <Card>
-          <CardContent className="py-16 text-center space-y-4">
-            <Dna className="h-16 w-16 text-muted-foreground/30 mx-auto" />
-            <div className="space-y-2">
-              <h3 className="font-display text-lg font-semibold">No reports yet</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                Upload your DNA data and ask about any trait to generate your first report.
-              </p>
+        /* Empty state */
+        <div className="py-20 space-y-6">
+          <div className="space-y-3">
+            <div className="h-12 w-12 rounded-xl bg-muted/50 flex items-center justify-center">
+              <FileText className="h-6 w-6 text-muted-foreground/40" />
             </div>
-            <Link href="/">
-              <Button className="bg-primary hover:bg-primary/90">
-                Analyze Your DNA
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+            <h3 className="text-xl font-semibold font-display">No reports yet</h3>
+            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+              Upload your DNA data and ask about any trait to generate your first analysis report.
+            </p>
+          </div>
+          <Link href="/">
+            <Button className="rounded-full font-display cursor-pointer">
+              Analyze Your DNA
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          </Link>
+        </div>
       ) : (
         <div className="space-y-3">
-          {reports.map((report) => (
-            <Link key={report.id} href={`/reports/${report.id}`}>
-              <Card className="transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-glow-primary/5">
-                <CardContent className="py-4">
-                  <div className="flex items-start gap-4">
-                    <div className="mt-1.5">
-                      <div className={`h-3 w-3 rounded-full ${confidenceColor(report.confidence)}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-4">
-                        <h3 className="font-display font-semibold capitalize truncate">
-                          {report.trait}
-                        </h3>
-                        <span className="text-xs text-muted-foreground shrink-0">
-                          {new Date(report.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+          {reports.map((report) => {
+            const pct = Math.round(report.confidence);
+            return (
+              <Link key={report.id} href={`/reports/${report.id}`} className="block group">
+                <div className="rounded-xl border border-border/20 p-5 transition-all duration-200 hover:border-primary/15 hover:bg-card/50 cursor-pointer">
+                  {/* Top: trait + date */}
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="min-w-0">
+                      <h3 className="font-display font-bold text-lg capitalize truncate group-hover:text-primary transition-colors">
+                        {report.trait}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">
                         {report.summary}
                       </p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs text-muted-foreground">
-                          Confidence: {Math.round(report.confidence * 100)}%
-                        </span>
-                        {report.is_public && (
-                          <span className="text-xs text-primary">Shared</span>
-                        )}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground/50 shrink-0 font-mono tabular-nums mt-1">
+                      {new Date(report.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+
+                  {/* Bottom: confidence bar + badges */}
+                  <div className="flex items-center gap-4">
+                    {/* Mini confidence bar */}
+                    <div className="flex items-center gap-2.5 flex-1">
+                      <span className={`text-sm font-bold font-display tabular-nums ${confidenceTextColor(report.confidence)}`}>
+                        {pct}%
+                      </span>
+                      <div className="flex-1 max-w-32 h-1.5 rounded-full bg-muted/60 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${confidenceColor(report.confidence)}`}
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
+                      <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider font-mono">
+                        {confidenceLabel(report.confidence)}
+                      </span>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {report.is_public && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/8 px-2 py-0.5">
+                          <Share2 className="h-2.5 w-2.5 text-primary" />
+                          <span className="text-[10px] font-medium text-primary">Shared</span>
+                        </span>
+                      )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
