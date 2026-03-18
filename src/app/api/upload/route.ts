@@ -38,7 +38,8 @@ export async function POST(request: Request) {
       snpCount: result.snpCount,
       format: result.format,
     });
-  } catch {
+  } catch (err) {
+    console.error("Upload error:", err);
     return NextResponse.json(
       { error: "Failed to process the DNA file. Please try again." },
       { status: 500 }
