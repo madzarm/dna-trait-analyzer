@@ -40,48 +40,89 @@ export function SnpTable({ matches }: SnpTableProps) {
   );
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>SNP</TableHead>
-            <TableHead>Gene</TableHead>
-            <TableHead>Your Genotype</TableHead>
-            <TableHead>Allele</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Evidence</TableHead>
-            <TableHead className="hidden lg:table-cell">Effect Size</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sorted.map((match) => {
-            const ev = evidenceBadge[match.evidenceStrength] ?? evidenceBadge.moderate;
-            return (
-              <TableRow key={match.rsid}>
-                <TableCell className="font-mono text-sm">{match.rsid}</TableCell>
-                <TableCell className="font-medium">{match.gene}</TableCell>
-                <TableCell className="font-mono">{match.userGenotype}</TableCell>
-                <TableCell className="font-mono">{match.riskAllele}</TableCell>
-                <TableCell>
-                  {match.hasRiskAllele ? (
-                    <Badge variant="default">Present</Badge>
-                  ) : (
-                    <Badge variant="secondary">Not present</Badge>
-                  )}
-                </TableCell>
-                <TableCell>
+    <>
+      {/* Desktop table view */}
+      <div className="hidden md:block rounded-md border overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>SNP</TableHead>
+              <TableHead>Gene</TableHead>
+              <TableHead>Your Genotype</TableHead>
+              <TableHead>Allele</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Evidence</TableHead>
+              <TableHead className="hidden lg:table-cell">Effect Size</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sorted.map((match) => {
+              const ev = evidenceBadge[match.evidenceStrength] ?? evidenceBadge.moderate;
+              return (
+                <TableRow key={match.rsid}>
+                  <TableCell className="font-mono text-sm">{match.rsid}</TableCell>
+                  <TableCell className="font-medium">{match.gene}</TableCell>
+                  <TableCell className="font-mono">{match.userGenotype}</TableCell>
+                  <TableCell className="font-mono">{match.riskAllele}</TableCell>
+                  <TableCell>
+                    {match.hasRiskAllele ? (
+                      <Badge variant="default">Present</Badge>
+                    ) : (
+                      <Badge variant="secondary">Not present</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${ev.className}`}>
+                      {ev.label}
+                    </span>
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell text-sm text-muted-foreground max-w-xs">
+                    {match.effectSize}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile card view */}
+      <div className="md:hidden space-y-3">
+        {sorted.map((match) => {
+          const ev = evidenceBadge[match.evidenceStrength] ?? evidenceBadge.moderate;
+          return (
+            <div key={match.rsid} className="rounded-md border p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-sm font-medium">{match.rsid}</span>
+                {match.hasRiskAllele ? (
+                  <Badge variant="default">Present</Badge>
+                ) : (
+                  <Badge variant="secondary">Not present</Badge>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                <div className="text-muted-foreground">Gene</div>
+                <div className="font-medium">{match.gene}</div>
+                <div className="text-muted-foreground">Genotype</div>
+                <div className="font-mono">{match.userGenotype}</div>
+                <div className="text-muted-foreground">Risk Allele</div>
+                <div className="font-mono">{match.riskAllele}</div>
+                <div className="text-muted-foreground">Evidence</div>
+                <div>
                   <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${ev.className}`}>
                     {ev.label}
                   </span>
-                </TableCell>
-                <TableCell className="hidden lg:table-cell text-sm text-muted-foreground max-w-xs">
+                </div>
+              </div>
+              {match.effectSize && (
+                <p className="text-xs text-muted-foreground pt-1 border-t">
                   {match.effectSize}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }

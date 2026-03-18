@@ -127,3 +127,84 @@
     @apply font-sans;
   }
 }
+
+/* Print-optimized styles for PDF export */
+@media print {
+  /* Hide non-report UI elements */
+  nav,
+  footer,
+  button,
+  [data-print-hidden],
+  [data-slot="cookie-consent"] {
+    display: none !important;
+  }
+
+  /* Reset page for clean printing */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Remove shadow/ring from cards for print */
+  [data-slot="card"] {
+    box-shadow: none !important;
+    ring: none !important;
+    border: 1px solid #e5e7eb !important;
+    break-inside: avoid;
+  }
+
+  /* Ensure tables print well */
+  table {
+    break-inside: auto;
+  }
+  tr {
+    break-inside: avoid;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 1.5cm;
+  }
+
+  /* Ensure report content fills width */
+  .max-w-3xl,
+  .max-w-5xl {
+    max-width: 100% !important;
+  }
+
+  /* Print-visible header/footer */
+  [data-print-block] {
+    display: block !important;
+  }
+
+  /* Branded print header */
+  [data-print-header] {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  [data-print-header] .print-logo {
+    font-size: 14pt;
+    font-weight: 700;
+  }
+  [data-print-header] .print-date {
+    font-size: 9pt;
+    color: #6b7280;
+  }
+
+  /* Branded print footer */
+  [data-print-footer] {
+    display: block !important;
+    text-align: center;
+    padding-top: 0.75rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 8pt;
+    color: #9ca3af;
+  }
+}
