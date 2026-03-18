@@ -1,8 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Suspense, useCallback, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TraitInput } from "@/components/TraitInput";
 import { ResultsCard } from "@/components/ResultsCard";
@@ -16,7 +18,9 @@ function AnalyzeContent() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressMessages, setProgressMessages] = useState<string[]>([]);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [reportId, setReportId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [usageLimitHit, setUsageLimitHit] = useState(false);
 
   const handleAnalyze = useCallback(
     async (trait: string) => {
@@ -25,6 +29,7 @@ function AnalyzeContent() {
       setIsAnalyzing(true);
       setProgressMessages([]);
       setResult(null);
+      setReportId(null);
       setError("");
 
       try {
@@ -36,6 +41,9 @@ function AnalyzeContent() {
 
         if (!response.ok) {
           const data = await response.json();
+          if (response.status === 402 || data.code === "USAGE_LIMIT_EXCEEDED") {
+            setUsageLimitHit(true);
+          }
           setError(data.error || "Analysis failed");
           setIsAnalyzing(false);
           return;
@@ -70,6 +78,9 @@ function AnalyzeContent() {
                 }
               } else if (event.type === "result" && event.data) {
                 setResult(event.data);
+                if (event.reportId) {
+                  setReportId(event.reportId);
+                }
               } else if (event.type === "error") {
                 setError(event.message || "Analysis failed");
               }
@@ -143,9 +154,18 @@ function AnalyzeContent() {
       )}
 
       {error && (
-        <Card className="border-destructive">
+        <Card className={usageLimitHit ? "border-primary" : "border-destructive"}>
           <CardContent className="py-4">
-            <p className="text-sm text-destructive">{error}</p>
+            <p className={`text-sm ${usageLimitHit ? "text-foreground" : "text-destructive"}`}>
+              {error}
+            </p>
+            {usageLimitHit && (
+              <div className="mt-3">
+                <Link href="/pricing">
+                  <Button size="sm">View Plans</Button>
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -153,8 +173,10 @@ function AnalyzeContent() {
       {result && (
         <ResultsCard
           result={result}
+          reportId={reportId}
           onNewAnalysis={() => {
             setResult(null);
+            setReportId(null);
             setProgressMessages([]);
           }}
         />

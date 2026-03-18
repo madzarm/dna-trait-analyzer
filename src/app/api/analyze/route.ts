@@ -1,9 +1,11 @@
 import { getDNA } from "@/lib/dna-store";
 import { runAnalysisPipeline } from "@/lib/llm-pipeline";
+import { createClient } from "@/lib/supabase/server";
+import { checkUsageAllowance, recordUsage } from "@/lib/usage";
 
 export async function POST(request: Request) {
   try {
-    const { trait, sessionId } = await request.json();
+    const { trait, sessionId, useCommercialSources } = await request.json();
 
     if (!trait || typeof trait !== "string" || trait.trim().length === 0) {
       return new Response(
@@ -27,6 +29,24 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check if user is authenticated to save report
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Check usage allowance
+    const allowance = await checkUsageAllowance(user?.id, sessionId);
+    if (!allowance.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "You've used all your free analyses. Upgrade your plan to continue.",
+          code: "USAGE_LIMIT_EXCEEDED",
+          remaining: 0,
+          plan: allowance.plan,
+        }),
+        { status: 402, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream({
@@ -41,10 +61,31 @@ export async function POST(request: Request) {
           const result = await runAnalysisPipeline(
             trait.trim(),
             session.dnaMap,
-            (event) => send(event)
+            (event) => send(event),
+            { useCommercialSources: useCommercialSources === true }
           );
 
-          send({ type: "result", data: result });
+          // Save report to database if user is authenticated
+          let reportId: string | null = null;
+          if (user) {
+            const { data: report } = await supabase.from("reports").insert({
+              user_id: user.id,
+              trait: result.trait,
+              summary: result.summary,
+              confidence: result.confidence,
+              snp_matches: result.snpMatches,
+              interpretation: result.interpretation,
+              disclaimer: result.disclaimer,
+              sources: result.sources,
+            }).select("id").single();
+
+            reportId = report?.id ?? null;
+          }
+
+          // Record usage (decrements credits for free/starter users)
+          await recordUsage(user?.id, sessionId, reportId ?? undefined);
+
+          send({ type: "result", data: result, reportId });
         } catch (err) {
           const message =
             err instanceof Error ? err.message : "Analysis failed";
