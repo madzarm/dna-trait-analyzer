@@ -12,9 +12,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    if (!file.name.endsWith(".csv")) {
+    const validExtensions = [".csv", ".txt", ".tsv"];
+    const hasValidExtension = validExtensions.some((ext) =>
+      file.name.toLowerCase().endsWith(ext)
+    );
+    if (!hasValidExtension) {
       return NextResponse.json(
-        { error: "Please upload a CSV file" },
+        { error: "Please upload a DNA data file (.csv, .txt, or .tsv)" },
         { status: 400 }
       );
     }
@@ -32,6 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       sessionId,
       snpCount: result.snpCount,
+      format: result.format,
     });
   } catch {
     return NextResponse.json(

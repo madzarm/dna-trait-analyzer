@@ -18,8 +18,9 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
     async (file: File) => {
       setError("");
 
-      if (!file.name.endsWith(".csv")) {
-        setError("Please upload a CSV file.");
+      const validExtensions = [".csv", ".txt", ".tsv"];
+      if (!validExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))) {
+        setError("Please upload a DNA data file (.csv, .txt, or .tsv).");
         return;
       }
 
@@ -104,13 +105,13 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
                   Drop your DNA file here
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  MyHeritage raw DNA CSV file
+                  Supports 23andMe, AncestryDNA, MyHeritage, and FTDNA
                 </p>
               </div>
               <label className="cursor-pointer">
                 <input
                   type="file"
-                  accept=".csv"
+                  accept=".csv,.txt,.tsv"
                   onChange={handleFileInput}
                   className="hidden"
                 />
