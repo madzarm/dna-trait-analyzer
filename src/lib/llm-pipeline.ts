@@ -85,6 +85,13 @@ export async function runAnalysisPipeline(
   let clinvarContext = "";
   let gwasContext = "";
 
+  // Wrap a promise with a timeout so one slow source doesn't block the others
+  function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+    const timeout = new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms));
+    return Promise.race([promise, timeout]);
+  }
+
+  const SOURCE_TIMEOUT_MS = 35000;
   const fetchPromises: Promise<void>[] = [];
 
   // SNPedia: only if NOT in commercial mode (CC BY-NC-SA license)
@@ -96,16 +103,20 @@ export async function runAnalysisPipeline(
     });
 
     fetchPromises.push(
-      batchLookupSNPs(allRsids).then((snpediaData) => {
-        if (snpediaData.size > 0) {
-          onProgress({
-            type: "progress",
-            phase: "snpedia",
-            message: `Retrieved SNPedia data for ${snpediaData.size} of ${allRsids.length} SNPs`,
-          });
-          snpediaContext = formatSNPediaContext(snpediaData, userGenotypes);
-        }
-      })
+      withTimeout(
+        batchLookupSNPs(allRsids).then((snpediaData) => {
+          if (snpediaData.size > 0) {
+            onProgress({
+              type: "progress",
+              phase: "snpedia",
+              message: `Retrieved SNPedia data for ${snpediaData.size} of ${allRsids.length} SNPs`,
+            });
+            snpediaContext = formatSNPediaContext(snpediaData, userGenotypes);
+          }
+        }),
+        SOURCE_TIMEOUT_MS,
+        undefined
+      )
     );
   }
 
@@ -117,16 +128,20 @@ export async function runAnalysisPipeline(
   });
 
   fetchPromises.push(
-    batchLookupClinVar(allRsids).then((clinvarData) => {
-      if (clinvarData.size > 0) {
-        onProgress({
-          type: "progress",
-          phase: "clinvar",
-          message: `Retrieved ClinVar data for ${clinvarData.size} of ${allRsids.length} SNPs`,
-        });
-        clinvarContext = formatClinVarContext(clinvarData, userGenotypes);
-      }
-    })
+    withTimeout(
+      batchLookupClinVar(allRsids).then((clinvarData) => {
+        if (clinvarData.size > 0) {
+          onProgress({
+            type: "progress",
+            phase: "clinvar",
+            message: `Retrieved ClinVar data for ${clinvarData.size} of ${allRsids.length} SNPs`,
+          });
+          clinvarContext = formatClinVarContext(clinvarData, userGenotypes);
+        }
+      }),
+      SOURCE_TIMEOUT_MS,
+      undefined
+    )
   );
 
   // GWAS Catalog: always enabled (open access)
@@ -137,19 +152,29 @@ export async function runAnalysisPipeline(
   });
 
   fetchPromises.push(
-    batchLookupGWAS(allRsids).then((gwasData) => {
-      if (gwasData.size > 0) {
-        onProgress({
-          type: "progress",
-          phase: "gwas",
-          message: `Retrieved GWAS Catalog data for ${gwasData.size} of ${allRsids.length} SNPs`,
-        });
-        gwasContext = formatGWASContext(gwasData, userGenotypes);
-      }
-    })
+    withTimeout(
+      batchLookupGWAS(allRsids).then((gwasData) => {
+        if (gwasData.size > 0) {
+          onProgress({
+            type: "progress",
+            phase: "gwas",
+            message: `Retrieved GWAS Catalog data for ${gwasData.size} of ${allRsids.length} SNPs`,
+          });
+          gwasContext = formatGWASContext(gwasData, userGenotypes);
+        }
+      }),
+      SOURCE_TIMEOUT_MS,
+      undefined
+    )
   );
 
   await Promise.all(fetchPromises);
+
+  onProgress({
+    type: "progress",
+    phase: "fetch_complete",
+    message: "Data fetching complete, proceeding with analysis...",
+  });
 
   // Step 4: Interpret results
   onProgress({

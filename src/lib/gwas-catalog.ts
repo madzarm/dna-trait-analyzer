@@ -89,7 +89,10 @@ export async function lookupGWAS(
 
   const results: GWASAssociation[] = [];
 
-  for (const assoc of rawAssociations) {
+  // Limit to first 3 associations to avoid excessive sub-requests
+  const limitedAssociations = rawAssociations.slice(0, 3);
+
+  for (const assoc of limitedAssociations) {
     // Extract risk allele
     const riskAlleleName =
       assoc.strongestRiskAlleles?.[0]?.riskAlleleName ?? "";
@@ -170,28 +173,37 @@ export async function lookupGWAS(
 export async function batchLookupGWAS(
   rsids: string[]
 ): Promise<Map<string, GWASAssociation[]>> {
+  const BATCH_TIMEOUT_MS = 30000;
   const results = new Map<string, GWASAssociation[]>();
 
-  // GWAS Catalog is generous with rate limits but we'll still batch
-  const chunks: string[][] = [];
-  for (let i = 0; i < rsids.length; i += 3) {
-    chunks.push(rsids.slice(i, i + 3));
-  }
-
-  for (const chunk of chunks) {
-    const promises = chunk.map(async (rsid) => {
-      const data = await lookupGWAS(rsid);
-      if (data.length > 0) results.set(rsid.toLowerCase(), data);
-    });
-    await Promise.all(promises);
-
-    // Brief delay between chunks
-    if (chunks.indexOf(chunk) < chunks.length - 1) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+  const doWork = async (): Promise<Map<string, GWASAssociation[]>> => {
+    // GWAS Catalog is generous with rate limits but we'll still batch
+    const chunks: string[][] = [];
+    for (let i = 0; i < rsids.length; i += 3) {
+      chunks.push(rsids.slice(i, i + 3));
     }
-  }
 
-  return results;
+    for (const chunk of chunks) {
+      const promises = chunk.map(async (rsid) => {
+        const data = await lookupGWAS(rsid);
+        if (data.length > 0) results.set(rsid.toLowerCase(), data);
+      });
+      await Promise.all(promises);
+
+      // Brief delay between chunks
+      if (chunks.indexOf(chunk) < chunks.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    return results;
+  };
+
+  const timeout = new Promise<Map<string, GWASAssociation[]>>((resolve) => {
+    setTimeout(() => resolve(results), BATCH_TIMEOUT_MS);
+  });
+
+  return Promise.race([doWork(), timeout]);
 }
 
 export function formatGWASContext(

@@ -149,29 +149,38 @@ export async function lookupClinVar(
 export async function batchLookupClinVar(
   rsids: string[]
 ): Promise<Map<string, ClinVarData>> {
+  const BATCH_TIMEOUT_MS = 20000;
   const results = new Map<string, ClinVarData>();
 
-  // NCBI rate limit: 3 requests/second without API key
-  // We make 2 requests per rsid (esearch + esummary), so process 1 at a time with a delay
-  const chunks: string[][] = [];
-  for (let i = 0; i < rsids.length; i += 3) {
-    chunks.push(rsids.slice(i, i + 3));
-  }
-
-  for (const chunk of chunks) {
-    const promises = chunk.map(async (rsid) => {
-      const data = await lookupClinVar(rsid);
-      if (data) results.set(rsid.toLowerCase(), data);
-    });
-    await Promise.all(promises);
-
-    // Rate limit: wait 1 second between chunks
-    if (chunks.indexOf(chunk) < chunks.length - 1) {
-      await new Promise((resolve) => setTimeout(resolve, 1100));
+  const doWork = async (): Promise<Map<string, ClinVarData>> => {
+    // NCBI rate limit: 3 requests/second without API key
+    // We make 2 requests per rsid (esearch + esummary), so process 1 at a time with a delay
+    const chunks: string[][] = [];
+    for (let i = 0; i < rsids.length; i += 3) {
+      chunks.push(rsids.slice(i, i + 3));
     }
-  }
 
-  return results;
+    for (const chunk of chunks) {
+      const promises = chunk.map(async (rsid) => {
+        const data = await lookupClinVar(rsid);
+        if (data) results.set(rsid.toLowerCase(), data);
+      });
+      await Promise.all(promises);
+
+      // Rate limit: wait 1 second between chunks
+      if (chunks.indexOf(chunk) < chunks.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1100));
+      }
+    }
+
+    return results;
+  };
+
+  const timeout = new Promise<Map<string, ClinVarData>>((resolve) => {
+    setTimeout(() => resolve(results), BATCH_TIMEOUT_MS);
+  });
+
+  return Promise.race([doWork(), timeout]);
 }
 
 export function formatClinVarContext(
