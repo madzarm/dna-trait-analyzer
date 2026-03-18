@@ -35,9 +35,11 @@ const evidenceBadge: Record<
 export function SnpTable({ matches }: SnpTableProps) {
   if (matches.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-4">
-        None of the researched SNPs were found in your DNA data.
-      </p>
+      <div className="rounded-2xl border border-border/20 bg-muted/30 p-8 text-center">
+        <p className="text-sm text-muted-foreground">
+          None of the researched SNPs were found in your DNA data.
+        </p>
+      </div>
     );
   }
 
@@ -51,42 +53,57 @@ export function SnpTable({ matches }: SnpTableProps) {
 
   return (
     <>
-      {/* Count summary */}
-      <p className="text-sm text-muted-foreground mb-3">
-        {sorted.length} SNPs analyzed, {presentCount} variant{presentCount !== 1 ? "s" : ""} present
-      </p>
+      {/* Summary bar */}
+      <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-primary" />
+          <span className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground tabular-nums">{presentCount}</span> variant{presentCount !== 1 ? "s" : ""} present
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-muted-foreground/30" />
+          <span className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground tabular-nums">{sorted.length - presentCount}</span> not present
+          </span>
+        </div>
+      </div>
 
-      {/* Desktop table view */}
-      <div className="hidden md:block rounded-md border overflow-x-auto">
+      {/* Desktop table */}
+      <div className="hidden md:block rounded-xl border border-border/20 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-surface-sunken hover:bg-surface-sunken">
-              <TableHead>SNP</TableHead>
-              <TableHead>Gene</TableHead>
-              <TableHead>Your Genotype</TableHead>
-              <TableHead>Allele</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Evidence</TableHead>
-              <TableHead className="hidden lg:table-cell">Effect Size</TableHead>
+            <TableRow className="bg-muted/30 hover:bg-muted/30 border-b border-border/20">
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">SNP</TableHead>
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Gene</TableHead>
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Genotype</TableHead>
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Allele</TableHead>
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Status</TableHead>
+              <TableHead className="text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Evidence</TableHead>
+              <TableHead className="hidden lg:table-cell text-[10px] uppercase tracking-wider font-mono font-medium text-muted-foreground/60">Effect</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sorted.map((match, idx) => {
+            {sorted.map((match) => {
               const ev = evidenceBadge[match.evidenceStrength] ?? evidenceBadge.moderate;
               return (
                 <TableRow
                   key={match.rsid}
-                  className={idx % 2 === 0 ? "bg-transparent" : "bg-muted/30"}
+                  className={`border-b border-border/10 transition-colors ${
+                    match.hasRiskAllele
+                      ? "bg-primary/[0.02] hover:bg-primary/[0.04]"
+                      : "hover:bg-muted/20"
+                  }`}
                 >
-                  <TableCell className="font-mono text-sm">{match.rsid}</TableCell>
+                  <TableCell className="font-mono text-sm text-primary font-medium">{match.rsid}</TableCell>
                   <TableCell className="font-medium">{match.gene}</TableCell>
-                  <TableCell className="font-mono">{match.userGenotype}</TableCell>
-                  <TableCell className="font-mono">{match.riskAllele}</TableCell>
+                  <TableCell className="font-mono tabular-nums">{match.userGenotype}</TableCell>
+                  <TableCell className="font-mono tabular-nums">{match.riskAllele}</TableCell>
                   <TableCell>
                     <span className="inline-flex items-center gap-1.5">
                       <span
                         className={`h-2 w-2 rounded-full ${
-                          match.hasRiskAllele ? "bg-primary" : "bg-muted-foreground/40"
+                          match.hasRiskAllele ? "bg-primary" : "bg-muted-foreground/30"
                         }`}
                       />
                       <span className="text-sm">
@@ -96,7 +113,7 @@ export function SnpTable({ matches }: SnpTableProps) {
                   </TableCell>
                   <TableCell>
                     <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${ev.className}`}
+                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${ev.className}`}
                     >
                       {ev.label}
                     </span>
@@ -111,48 +128,56 @@ export function SnpTable({ matches }: SnpTableProps) {
         </Table>
       </div>
 
-      {/* Mobile card view */}
-      <div className="md:hidden space-y-3">
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-2">
         {sorted.map((match) => {
           const ev = evidenceBadge[match.evidenceStrength] ?? evidenceBadge.moderate;
+          const isPresent = match.hasRiskAllele;
           return (
             <div
               key={match.rsid}
-              className={`rounded-md border p-3 space-y-2 border-l-4 ${
-                match.hasRiskAllele ? "border-l-primary" : "border-l-muted-foreground/30"
+              className={`rounded-xl p-4 space-y-3 transition-colors ${
+                isPresent
+                  ? "bg-primary/[0.03] border border-primary/15"
+                  : "bg-muted/20 border border-border/15"
               }`}
             >
+              {/* Top row: rsid + status */}
               <div className="flex items-center justify-between">
-                <span className="font-mono text-sm font-medium">{match.rsid}</span>
-                <span className="inline-flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   <span
-                    className={`h-2 w-2 rounded-full ${
-                      match.hasRiskAllele ? "bg-primary" : "bg-muted-foreground/40"
+                    className={`h-2.5 w-2.5 rounded-full ${
+                      isPresent ? "bg-primary" : "bg-muted-foreground/30"
                     }`}
                   />
-                  <span className="text-xs">
-                    {match.hasRiskAllele ? "Present" : "Not present"}
-                  </span>
+                  <span className="font-mono text-sm font-semibold text-primary">{match.rsid}</span>
+                </div>
+                <span
+                  className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${ev.className}`}
+                >
+                  {ev.label}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-                <div className="text-muted-foreground">Gene</div>
-                <div className="font-medium">{match.gene}</div>
-                <div className="text-muted-foreground">Genotype</div>
-                <div className="font-mono">{match.userGenotype}</div>
-                <div className="text-muted-foreground">Risk Allele</div>
-                <div className="font-mono">{match.riskAllele}</div>
-                <div className="text-muted-foreground">Evidence</div>
+
+              {/* Gene + genotype row */}
+              <div className="flex items-center gap-6 text-sm">
                 <div>
-                  <span
-                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${ev.className}`}
-                  >
-                    {ev.label}
-                  </span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider font-mono block">Gene</span>
+                  <span className="font-medium">{match.gene}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider font-mono block">Genotype</span>
+                  <span className="font-mono tabular-nums">{match.userGenotype}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider font-mono block">Allele</span>
+                  <span className="font-mono tabular-nums">{match.riskAllele}</span>
                 </div>
               </div>
+
+              {/* Effect size */}
               {match.effectSize && (
-                <p className="text-xs text-muted-foreground pt-1 border-t">
+                <p className="text-xs text-muted-foreground leading-relaxed pt-2 border-t border-border/10">
                   {match.effectSize}
                 </p>
               )}
