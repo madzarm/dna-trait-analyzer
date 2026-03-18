@@ -12,9 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Check } from "lucide-react";
 import Link from "next/link";
 
 const plans = [
@@ -189,8 +189,8 @@ function PricingContent() {
           )}
 
           {/* Header */}
-          <div className="text-center space-y-3">
-            <h1 className="text-4xl font-bold tracking-tight">
+          <div className="text-center space-y-3 animate-fade-in-up">
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
               Simple, Transparent Pricing
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -200,43 +200,49 @@ function PricingContent() {
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-in">
             {plans.map((plan) => (
               <Card
                 key={plan.name}
-                className={
+                className={`relative transition-all duration-200 ${
                   plan.highlighted
-                    ? "ring-2 ring-primary relative"
-                    : "relative"
-                }
+                    ? "scale-[1.03] border-t-4 border-t-primary shadow-[0_0_30px_var(--glow-primary)]"
+                    : "hover:-translate-y-0.5"
+                }`}
               >
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg">{plan.name}</CardTitle>
+                    <CardTitle className="font-display text-lg">{plan.name}</CardTitle>
                     {plan.badge && (
-                      <Badge variant="secondary">{plan.badge}</Badge>
+                      <span
+                        className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
+                          plan.highlighted
+                            ? "bg-primary/15 text-primary shadow-[0_0_12px_var(--glow-primary)]"
+                            : "bg-secondary text-secondary-foreground"
+                        }`}
+                      >
+                        {plan.badge}
+                      </span>
                     )}
                   </div>
                   <CardDescription>{plan.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <span className="text-3xl font-bold">{plan.price}</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-display font-bold text-5xl">{plan.price}</span>
                     {plan.period && (
-                      <span className="text-sm text-muted-foreground ml-1">
+                      <span className="text-sm text-muted-foreground">
                         {plan.period}
                       </span>
                     )}
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2.5">
                     {plan.features.map((feature) => (
                       <li
                         key={feature}
-                        className="flex items-start gap-2 text-sm"
+                        className="flex items-start gap-2.5 text-sm"
                       >
-                        <span className="text-primary mt-0.5 shrink-0">
-                          &#10003;
-                        </span>
+                        <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -287,19 +293,24 @@ function PricingContent() {
             </div>
           )}
 
-          {/* FAQ Section */}
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold text-center">
+          {/* FAQ Section — Accordion */}
+          <div className="space-y-8 animate-fade-in-up">
+            <h2 className="font-display text-2xl font-bold text-center">
               Frequently Asked Questions
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="max-w-3xl mx-auto divide-y divide-border">
               {faqs.map((faq) => (
-                <div key={faq.question} className="space-y-2">
-                  <h3 className="font-semibold text-sm">{faq.question}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                <details key={faq.question} className="group py-1">
+                  <summary className="flex items-center justify-between cursor-pointer py-4 text-sm font-semibold list-none [&::-webkit-details-marker]:hidden">
+                    <span>{faq.question}</span>
+                    <span className="ml-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-lg">
+                      +
+                    </span>
+                  </summary>
+                  <p className="text-sm text-muted-foreground leading-relaxed pb-4 pr-8">
                     {faq.answer}
                   </p>
-                </div>
+                </details>
               ))}
             </div>
           </div>

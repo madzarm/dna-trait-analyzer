@@ -29,9 +29,9 @@ export function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur-sm">
-      <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <p className="text-sm text-muted-foreground flex-1">
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm" data-slot="cookie-consent">
+      <div className="rounded-xl border bg-card/95 backdrop-blur-md shadow-xl p-5 space-y-4">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           We use essential cookies to make this site work. With your consent, we
           may also use analytics cookies to improve the service. See our{" "}
           <Link
@@ -42,11 +42,15 @@ export function CookieConsent() {
           </Link>{" "}
           for details.
         </p>
-        <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" size="sm" onClick={handleDecline}>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleDecline} className="flex-1">
             Decline
           </Button>
-          <Button size="sm" onClick={handleAccept}>
+          <Button
+            size="sm"
+            onClick={handleAccept}
+            className="flex-1 bg-primary hover:bg-primary/90"
+          >
             Accept
           </Button>
         </div>

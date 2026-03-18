@@ -18,21 +18,23 @@ export default function PrivacyPolicyPage() {
 
         <div className="mt-8 space-y-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="font-display text-3xl font-bold tracking-tight">
               Privacy Policy
             </h1>
             <p className="text-sm text-muted-foreground mt-2">
               Last updated: March 18, 2026
             </p>
-            <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 font-medium">
-              TEMPLATE — This document requires review by a qualified attorney
-              before use.
-            </p>
+            <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+              <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+                TEMPLATE — This document requires review by a qualified attorney
+                before use.
+              </p>
+            </div>
           </div>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">1. Introduction</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="font-display text-xl font-semibold">1. Introduction</h2>
+            <p className="text-sm text-muted-foreground leading-loose">
               [COMPANY NAME] (&quot;Company,&quot; &quot;we,&quot;
               &quot;us,&quot; or &quot;our&quot;) operates the DNA Trait
               Analyzer service (&quot;Service&quot;). This Privacy Policy
@@ -44,15 +46,15 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               2. Information We Collect
             </h2>
 
             <div className="space-y-3">
-              <h3 className="text-base font-medium">
+              <h3 className="font-display text-base font-medium">
                 2.1 Information You Provide
               </h3>
-              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
                 <li>
                   <strong>Account information:</strong> Email address, name, and
                   authentication credentials (if you create an account)
@@ -74,10 +76,10 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-base font-medium">
+              <h3 className="font-display text-base font-medium">
                 2.2 Information Collected Automatically
               </h3>
-              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
                 <li>
                   <strong>Usage data:</strong> Pages visited, features used,
                   timestamps, and interaction patterns
@@ -95,14 +97,14 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               3. How We Handle Your Genetic Data
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-loose">
               We understand that genetic data is among the most sensitive
               personal information. Here is exactly how we handle it:
             </p>
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2 ml-4">
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2 ml-4 leading-loose">
               <li>
                 <strong>Processing:</strong> Your raw DNA file is processed
                 server-side to extract specific SNP (Single Nucleotide
@@ -132,10 +134,10 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               4. How We Use Your Information
             </h2>
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
               <li>To provide, maintain, and improve the Service</li>
               <li>
                 To generate genetic trait analyses based on your uploaded data
@@ -152,7 +154,7 @@ export default function PrivacyPolicyPage() {
                 To comply with legal obligations
               </li>
             </ul>
-            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+            <p className="text-sm text-muted-foreground leading-loose font-medium">
               We do NOT sell your genetic data to third parties. We do NOT use
               your genetic data for research purposes without your explicit
               consent.
@@ -160,13 +162,13 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               5. Third-Party Services
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-loose">
               The Service integrates with the following third-party providers:
             </p>
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2 ml-4">
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2 ml-4 leading-loose">
               <li>
                 <strong>Anthropic (Claude API):</strong> Powers our AI analysis
                 engine. Selected SNP data is sent to Anthropic for processing.
@@ -188,10 +190,10 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               6. Data Retention
             </h2>
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
               <li>
                 <strong>Raw DNA files:</strong> Deleted automatically within 1
                 hour of upload
@@ -215,19 +217,19 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               7. Your Rights
             </h2>
 
             <div className="space-y-3">
-              <h3 className="text-base font-medium">
+              <h3 className="font-display text-base font-medium">
                 7.1 CCPA Rights (California Residents)
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-loose">
                 Under the California Consumer Privacy Act, you have the right
                 to:
               </p>
-              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
                 <li>
                   <strong>Know:</strong> Request what personal information we
                   collect, use, and disclose
@@ -248,14 +250,14 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-base font-medium">
+              <h3 className="font-display text-base font-medium">
                 7.2 GDPR Rights (EEA Residents)
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-loose">
                 Under the General Data Protection Regulation, you have the right
                 to:
               </p>
-              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+              <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
                 <li>
                   <strong>Access:</strong> Obtain a copy of your personal data
                 </li>
@@ -284,7 +286,7 @@ export default function PrivacyPolicyPage() {
                   time where processing is based on consent
                 </li>
               </ul>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-loose">
                 <strong>Lawful basis for processing:</strong> We process genetic
                 data based on your explicit consent (GDPR Article 9(2)(a)). You
                 may withdraw consent at any time. For account data, we process
@@ -294,11 +296,11 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">8. Cookies</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="font-display text-xl font-semibold">8. Cookies</h2>
+            <p className="text-sm text-muted-foreground leading-loose">
               We use the following types of cookies:
             </p>
-            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 leading-loose">
               <li>
                 <strong>Essential cookies:</strong> Required for the Service to
                 function (e.g., session management, authentication)
@@ -308,15 +310,15 @@ export default function PrivacyPolicyPage() {
                 Service is used (only with your consent)
               </li>
             </ul>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-loose">
               You can manage your cookie preferences through the cookie consent
               banner or your browser settings.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">9. Data Security</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="font-display text-xl font-semibold">9. Data Security</h2>
+            <p className="text-sm text-muted-foreground leading-loose">
               We implement industry-standard security measures to protect your
               data, including encryption in transit (TLS) and at rest. However,
               no method of electronic transmission or storage is 100% secure. We
@@ -325,10 +327,10 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               10. Children&apos;s Privacy
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-loose">
               The Service is not intended for individuals under the age of 18.
               We do not knowingly collect genetic data or personal information
               from minors. If you believe we have collected data from a minor,
@@ -337,10 +339,10 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="font-display text-xl font-semibold">
               11. Changes to This Policy
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-loose">
               We may update this Privacy Policy from time to time. We will
               notify you of material changes by posting the updated policy on
               this page, updating the &quot;Last updated&quot; date, and, where
@@ -350,8 +352,8 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold">12. Contact Us</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <h2 className="font-display text-xl font-semibold">12. Contact Us</h2>
+            <p className="text-sm text-muted-foreground leading-loose">
               For any privacy-related questions, data access requests, or to
               exercise your rights, please contact:
             </p>

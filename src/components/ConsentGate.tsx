@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ShieldCheck, Lock } from "lucide-react";
 
 interface ConsentGateProps {
   children: React.ReactNode;
@@ -64,11 +65,12 @@ export function ConsentGate({ children }: ConsentGateProps) {
 
   return (
     <Card className="border-2">
-      <CardHeader>
-        <CardTitle className="text-lg">Before You Upload</CardTitle>
+      <CardHeader className="text-center pb-4">
+        <ShieldCheck className="h-10 w-10 text-primary mx-auto mb-2" />
+        <CardTitle className="font-display text-lg">Data Processing Agreement</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center">
           Please review and acknowledge the following before uploading your
           genetic data:
         </p>
@@ -148,9 +150,10 @@ export function ConsentGate({ children }: ConsentGateProps) {
           onClick={handleConsent}
           disabled={!allChecked}
           size="lg"
-          className="w-full"
+          className="w-full bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all"
         >
-          I Agree — Continue to Upload
+          <Lock className="h-4 w-4 mr-2" />
+          I Agree — Proceed Securely
         </Button>
       </CardContent>
     </Card>

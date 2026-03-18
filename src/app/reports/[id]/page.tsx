@@ -12,6 +12,7 @@ import { ConfidenceMeter } from "@/components/ConfidenceMeter";
 import { SnpTable } from "@/components/SnpTable";
 import { PrintReportButton } from "@/components/PrintReportButton";
 import { SocialShareButtons } from "@/components/SocialShareButtons";
+import { ChevronRight, Printer, Share2 } from "lucide-react";
 import type { Report } from "@/lib/supabase/types";
 import type { SNPMatch } from "@/lib/types";
 
@@ -114,33 +115,43 @@ export default function ReportPage({
         </span>
       </div>
 
-      <div className="flex items-center gap-4 print:hidden">
-        <Link
-          href="/reports"
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          &larr; All Reports
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-1.5 text-sm text-muted-foreground print:hidden">
+        <Link href="/" className="hover:text-foreground transition-colors">
+          Home
         </Link>
+        <ChevronRight className="h-3.5 w-3.5" />
+        <Link href="/reports" className="hover:text-foreground transition-colors">
+          Reports
+        </Link>
+        <ChevronRight className="h-3.5 w-3.5" />
+        <span className="text-foreground capitalize">{report.trait}</span>
+      </nav>
+
+      {/* Header area outside card */}
+      <div className="flex items-start justify-between gap-4 print:hidden">
+        <div>
+          <h1 className="font-display text-3xl font-bold capitalize">{report.trait}</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {report.summary}
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <PrintReportButton />
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleShare}
+            disabled={sharing || !!shareUrl}
+          >
+            <Share2 className="h-4 w-4 mr-1.5" />
+            {sharing ? "Sharing..." : shareUrl ? "Shared" : "Share"}
+          </Button>
+        </div>
       </div>
 
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="capitalize">{report.trait}</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                {report.summary}
-              </p>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="text-xs text-muted-foreground">
-                {new Date(report.created_at).toLocaleDateString()}
-              </span>
-              <PrintReportButton />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 pt-6">
           <ConfidenceMeter confidence={report.confidence} />
 
           <div>

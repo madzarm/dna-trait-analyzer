@@ -18,6 +18,8 @@ interface BlogPost {
   title: string;
   date: string;
   excerpt: string;
+  category: string;
+  readingTime: string;
 }
 
 const posts: BlogPost[] = [
@@ -27,6 +29,8 @@ const posts: BlogPost[] = [
     date: "March 15, 2026",
     excerpt:
       "You took a 23andMe test, got your ancestry breakdown and health reports — but there's so much more hiding in your raw data. Here's how to unlock it.",
+    category: "Guide",
+    readingTime: "6 min read",
   },
   {
     slug: "promethease-alternative",
@@ -34,6 +38,8 @@ const posts: BlogPost[] = [
     date: "March 10, 2026",
     excerpt:
       "Promethease changed how people explore their genetics, but its fixed-database approach has limitations. Compare it with the next generation of AI-powered DNA analysis.",
+    category: "Comparison",
+    readingTime: "8 min read",
   },
   {
     slug: "understanding-mthfr-gene",
@@ -41,6 +47,8 @@ const posts: BlogPost[] = [
     date: "March 5, 2026",
     excerpt:
       "MTHFR is one of the most talked-about genes in personal genetics. Learn what it does, what common variants mean, and how to check your own status.",
+    category: "Research",
+    readingTime: "10 min read",
   },
 ];
 
@@ -48,7 +56,9 @@ export default function BlogIndexPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight">
+          Research &amp; Guides
+        </h1>
         <p className="text-muted-foreground mt-2">
           Guides and insights on DNA analysis and genetic traits.
         </p>
@@ -57,10 +67,16 @@ export default function BlogIndexPage() {
       <div className="space-y-4">
         {posts.map((post) => (
           <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
-            <Card className="transition-colors hover:bg-muted/50">
-              <CardContent className="pt-2 space-y-2">
-                <p className="text-xs text-muted-foreground">{post.date}</p>
-                <h2 className="text-lg font-semibold leading-snug">
+            <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg border-l-4 border-l-primary">
+              <CardContent className="pt-4 space-y-2">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="text-primary font-medium">{post.category}</span>
+                  <span>&middot;</span>
+                  <span>{post.date}</span>
+                  <span>&middot;</span>
+                  <span>{post.readingTime}</span>
+                </div>
+                <h2 className="font-display text-lg font-semibold leading-snug">
                   {post.title}
                 </h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
