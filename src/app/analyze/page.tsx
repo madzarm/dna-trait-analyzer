@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TraitInput } from "@/components/TraitInput";
 import { ResultsCard } from "@/components/ResultsCard";
+import { CheckCircle2, Circle, AlertCircle, Sparkles } from "lucide-react";
 import type { AnalysisResult, ProgressEvent } from "@/lib/types";
 
 function AnalyzeContent() {
@@ -128,44 +129,73 @@ function AnalyzeContent() {
 
       <TraitInput onSubmit={handleAnalyze} isAnalyzing={isAnalyzing} />
 
+      {/* Vertical timeline progress */}
       {isAnalyzing && (
         <Card>
-          <CardContent className="py-8">
-            <div className="flex flex-col items-center gap-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-              <div className="space-y-2 text-center">
-                {progressMessages.map((msg, i) => (
-                  <p
-                    key={i}
-                    className={`text-sm transition-opacity ${
-                      i === progressMessages.length - 1
-                        ? "text-foreground"
-                        : "text-muted-foreground/50"
-                    }`}
-                  >
-                    {i < progressMessages.length - 1 ? "\u2713" : "\u2022"}{" "}
-                    {msg}
-                  </p>
-                ))}
-              </div>
+          <CardContent className="py-8 px-6">
+            <div className="flex flex-col">
+              {progressMessages.map((msg, i) => {
+                const isLast = i === progressMessages.length - 1;
+                const isCompleted = !isLast;
+
+                return (
+                  <div key={i} className="flex items-start gap-3 relative">
+                    {/* Vertical connecting line */}
+                    {!isLast && (
+                      <div className="absolute left-[11px] top-6 w-0.5 h-full bg-primary/20" />
+                    )}
+                    {/* Dot / icon */}
+                    <div className="relative z-10 mt-0.5 shrink-0">
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-6 w-6 text-primary" />
+                      ) : (
+                        <Circle className="h-6 w-6 text-primary animate-pulse" />
+                      )}
+                    </div>
+                    {/* Message */}
+                    <p
+                      className={`text-sm pb-4 ${
+                        isCompleted
+                          ? "text-muted-foreground"
+                          : "text-foreground font-medium"
+                      }`}
+                    >
+                      {msg}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
       )}
 
-      {error && (
-        <Card className={usageLimitHit ? "border-primary" : "border-destructive"}>
-          <CardContent className="py-4">
-            <p className={`text-sm ${usageLimitHit ? "text-foreground" : "text-destructive"}`}>
+      {/* Error card */}
+      {error && !usageLimitHit && (
+        <Card className="border-destructive/40">
+          <CardContent className="py-4 flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+            <p className="text-sm text-destructive">
               {error}
             </p>
-            {usageLimitHit && (
-              <div className="mt-3">
-                <Link href="/pricing">
-                  <Button size="sm">View Plans</Button>
-                </Link>
-              </div>
-            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Usage limit card - premium feel */}
+      {error && usageLimitHit && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="py-6 flex flex-col items-center text-center gap-3">
+            <Sparkles className="h-8 w-8 text-primary" />
+            <div>
+              <p className="text-sm font-medium text-foreground">{error}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Upgrade your plan to continue exploring your genetic traits.
+              </p>
+            </div>
+            <Link href="/pricing">
+              <Button size="sm" className="mt-1">View Plans</Button>
+            </Link>
           </CardContent>
         </Card>
       )}
