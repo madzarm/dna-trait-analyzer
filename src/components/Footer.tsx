@@ -1,95 +1,106 @@
 import Link from "next/link";
-import { Dna } from "lucide-react";
+import { Dna, ShieldCheck, Database, BookOpen } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer
-      className="border-t border-primary/30"
-      style={{ backgroundColor: "var(--surface-sunken)" }}
-    >
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand + Tagline */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 font-[family-name:var(--font-display)] font-bold text-base tracking-tight">
-              <Dna className="h-4 w-4 text-primary" />
-              <span>DNA Trait Analyzer</span>
+    <footer className="bg-surface-sunken">
+      {/* Gradient top edge to match navbar */}
+      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* Brand */}
+          <div className="md:col-span-1 space-y-4">
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Dna className="h-4 w-4 text-primary" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display font-bold text-sm tracking-tight leading-none">
+                  DNA Trait
+                </span>
+                <span className="font-display font-medium text-[10px] tracking-[0.12em] text-muted-foreground uppercase leading-none mt-0.5">
+                  Analyzer
+                </span>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               AI-powered genetic trait analysis backed by published research.
-              For educational purposes only &mdash; not medical advice.
+              For educational purposes only.
             </p>
-            <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} DNA Trait Analyzer. All rights
-              reserved.
+            <p className="text-xs text-muted-foreground/60">
+              &copy; {new Date().getFullYear()} DNA Trait Analyzer
             </p>
           </div>
 
-          {/* Links: Product + Legal */}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Product
-              </h4>
-              <nav className="flex flex-col gap-2">
-                <Link
-                  href="/analyze"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Analyze
-                </Link>
-                <Link
-                  href="/pricing"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Pricing
-                </Link>
-                <Link
-                  href="/blog"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Blog
-                </Link>
-              </nav>
-            </div>
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Legal
-              </h4>
-              <nav className="flex flex-col gap-2">
-                <Link
-                  href="/legal/terms"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Terms of Service
-                </Link>
-                <Link
-                  href="/legal/privacy"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Privacy Policy
-                </Link>
-                <a
-                  href="mailto:support@dnatraitanalyzer.com"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors duration-200"
-                >
-                  Contact
-                </a>
-              </nav>
-            </div>
-          </div>
-
-          {/* Built with */}
+          {/* Product links */}
           <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Built with
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              Product
             </h4>
-            <ul className="space-y-1.5 text-sm text-muted-foreground">
-              <li>Next.js &amp; React</li>
-              <li>Anthropic Claude AI</li>
-              <li>Supabase</li>
-              <li>Tailwind CSS</li>
-            </ul>
+            <nav className="flex flex-col gap-2">
+              {[
+                { href: "/analyze", label: "Analyze" },
+                { href: "/pricing", label: "Pricing" },
+                { href: "/blog", label: "Blog" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Legal links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              Legal
+            </h4>
+            <nav className="flex flex-col gap-2">
+              <Link
+                href="/legal/terms"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="/legal/privacy"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <a
+                href="mailto:support@dnatraitanalyzer.com"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Contact
+              </a>
+            </nav>
+          </div>
+
+          {/* Trust signals — replacing "Built with" */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              Trust
+            </h4>
+            <div className="flex flex-col gap-3">
+              {[
+                { icon: ShieldCheck, text: "Data auto-deleted in 1 hour" },
+                { icon: Database, text: "ClinVar & GWAS Catalog sources" },
+                { icon: BookOpen, text: "Peer-reviewed citations" },
+              ].map((item) => (
+                <div key={item.text} className="flex items-center gap-2">
+                  <item.icon className="h-3.5 w-3.5 text-primary/60 shrink-0" />
+                  <span className="text-xs text-muted-foreground">
+                    {item.text}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
