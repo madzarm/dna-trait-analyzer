@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Check, ChevronDown, Dna } from "lucide-react";
 import Link from "next/link";
 
 const plans = [
@@ -170,7 +171,7 @@ function PricingContent() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 py-16 px-6">
-        <div className="max-w-5xl mx-auto space-y-16">
+        <div className="max-w-6xl mx-auto space-y-16">
           {/* Success/Cancel Messages */}
           {success && (
             <Alert>
@@ -188,48 +189,61 @@ function PricingContent() {
             </Alert>
           )}
 
-          {/* Header */}
-          <div className="text-center space-y-3 animate-fade-in-up">
-            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+          {/* Header — left-aligned, matching homepage pattern */}
+          <div className="space-y-2 animate-fade-in-up">
+            <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+              Pricing
+            </p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
               Simple, Transparent Pricing
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
               Unlock the secrets in your DNA. Start free, upgrade when you need
               more.
             </p>
           </div>
 
-          {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-in">
+          {/* Pricing Cards — 1 col mobile, 2 col md, 4 col xl */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 stagger-in">
             {plans.map((plan) => (
               <Card
                 key={plan.name}
-                className={`relative transition-all duration-200 ${
+                className={`relative transition-all duration-300 ${
                   plan.highlighted
-                    ? "scale-[1.03] border-t-4 border-t-primary shadow-[0_0_30px_var(--glow-primary)]"
-                    : "hover:-translate-y-0.5"
+                    ? "border-primary/50 shadow-[0_0_50px_var(--glow-primary),0_0_100px_var(--glow-primary)]"
+                    : "border-border/50 card-hover-glow"
                 }`}
               >
-                <CardHeader>
+                {/* Highlighted card: gradient top bar */}
+                {plan.highlighted && (
+                  <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-lg bg-gradient-to-r from-primary via-accent to-primary" />
+                )}
+                <CardHeader className="pb-4">
                   <div className="flex items-center gap-2">
-                    <CardTitle className="font-display text-lg">{plan.name}</CardTitle>
+                    <CardTitle className="text-lg font-display">
+                      {plan.name}
+                    </CardTitle>
                     {plan.badge && (
-                      <span
-                        className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
+                      <Badge
+                        className={
                           plan.highlighted
-                            ? "bg-primary/15 text-primary shadow-[0_0_12px_var(--glow-primary)]"
-                            : "bg-secondary text-secondary-foreground"
-                        }`}
+                            ? "bg-primary/15 text-primary border-primary/20 text-[10px]"
+                            : "bg-secondary text-secondary-foreground text-[10px]"
+                        }
                       >
                         {plan.badge}
-                      </span>
+                      </Badge>
                     )}
                   </div>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardDescription className="text-sm">
+                    {plan.description}
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-5">
                   <div className="flex items-baseline gap-1">
-                    <span className="font-display font-bold text-5xl">{plan.price}</span>
+                    <span className="font-bold text-5xl font-display tabular-nums">
+                      {plan.price}
+                    </span>
                     {plan.period && (
                       <span className="text-sm text-muted-foreground">
                         {plan.period}
@@ -243,7 +257,7 @@ function PricingContent() {
                         className="flex items-start gap-2.5 text-sm"
                       >
                         <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                        {feature}
+                        <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -251,14 +265,21 @@ function PricingContent() {
                 <CardFooter>
                   {plan.priceType === null ? (
                     <Link href="/" className="w-full">
-                      <Button className="w-full" variant="outline">
+                      <Button
+                        className="w-full cursor-pointer rounded-full font-display"
+                        variant="outline"
+                      >
                         {plan.cta}
                       </Button>
                     </Link>
                   ) : !user ? (
                     <Link href="/auth/signup" className="w-full">
                       <Button
-                        className="w-full"
+                        className={`w-full cursor-pointer rounded-full font-display ${
+                          plan.highlighted
+                            ? "hover:shadow-[0_0_30px_var(--glow-primary)]"
+                            : ""
+                        }`}
                         variant={plan.highlighted ? "default" : "outline"}
                       >
                         Sign up to purchase
@@ -266,7 +287,11 @@ function PricingContent() {
                     </Link>
                   ) : (
                     <Button
-                      className="w-full"
+                      className={`w-full cursor-pointer rounded-full font-display ${
+                        plan.highlighted
+                          ? "hover:shadow-[0_0_30px_var(--glow-primary)]"
+                          : ""
+                      }`}
                       variant={plan.highlighted ? "default" : "outline"}
                       onClick={() => handleCheckout(plan.priceType!)}
                       disabled={loadingPlan !== null}
@@ -286,26 +311,29 @@ function PricingContent() {
             <div className="text-center">
               <button
                 onClick={handleManageSubscription}
-                className="text-sm text-muted-foreground hover:text-foreground underline"
+                className="text-sm text-muted-foreground hover:text-foreground underline cursor-pointer"
               >
                 Manage existing subscription
               </button>
             </div>
           )}
 
-          {/* FAQ Section — Accordion */}
-          <div className="space-y-8 animate-fade-in-up">
-            <h2 className="font-display text-2xl font-bold text-center">
-              Frequently Asked Questions
-            </h2>
-            <div className="max-w-3xl mx-auto divide-y divide-border">
+          {/* FAQ Section — left-aligned header */}
+          <div className="space-y-8">
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+                FAQ
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold font-display tracking-tight">
+                Frequently Asked Questions
+              </h2>
+            </div>
+            <div className="max-w-3xl divide-y divide-border/50">
               {faqs.map((faq) => (
                 <details key={faq.question} className="group py-1">
                   <summary className="flex items-center justify-between cursor-pointer py-4 text-sm font-semibold list-none [&::-webkit-details-marker]:hidden">
                     <span>{faq.question}</span>
-                    <span className="ml-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-45 text-lg">
-                      +
-                    </span>
+                    <ChevronDown className="h-4 w-4 ml-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
                   </summary>
                   <p className="text-sm text-muted-foreground leading-relaxed pb-4 pr-8">
                     {faq.answer}
@@ -324,8 +352,8 @@ export default function PricingPage() {
   return (
     <Suspense
       fallback={
-        <div className="text-center py-20 text-muted-foreground">
-          Loading...
+        <div className="flex items-center justify-center py-20">
+          <Dna className="h-8 w-8 text-primary animate-spin" />
         </div>
       }
     >
