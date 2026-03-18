@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TraitInput } from "@/components/TraitInput";
 import { ResultsCard } from "@/components/ResultsCard";
-import { CheckCircle2, Circle, AlertCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, AlertCircle, Sparkles, Dna, Upload } from "lucide-react";
 import type { AnalysisResult, ProgressEvent } from "@/lib/types";
 
 function AnalyzeContent() {
@@ -101,14 +101,20 @@ function AnalyzeContent() {
 
   if (!sessionId) {
     return (
-      <div className="text-center py-20">
-        <p className="text-muted-foreground">
-          No DNA data loaded.{" "}
-          <a href="/" className="text-primary hover:underline">
-            Upload your DNA file
-          </a>{" "}
-          first.
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <Dna className="h-16 w-16 text-primary mb-6" />
+        <h2 className="text-2xl font-bold tracking-tight mb-2">
+          No DNA data loaded
+        </h2>
+        <p className="text-muted-foreground mb-6">
+          Upload your raw DNA file to get started
         </p>
+        <Link href="/">
+          <Button size="lg">
+            <Upload className="mr-2 h-4 w-4" />
+            Upload your DNA file
+          </Button>
+        </Link>
       </div>
     );
   }
