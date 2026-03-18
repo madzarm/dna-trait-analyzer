@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Dna, Upload } from "lucide-react";
 
 interface UploadDropzoneProps {
@@ -88,77 +87,74 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
   );
 
   return (
-    <Card
-      className={`border-2 transition-all duration-300 ${
+    <div
+      className={`rounded-2xl border-2 transition-all duration-300 ${
         isDragging
-          ? "border-solid border-primary bg-primary/5 shadow-[0_0_24px_rgba(45,212,191,0.15)]"
-          : "border-dashed border-primary/40 hover:border-primary/60"
+          ? "border-solid border-primary bg-primary/5 shadow-[0_0_30px_var(--glow-primary)]"
+          : "border-dashed border-border/50 hover:border-primary/40"
       }`}
     >
-      <CardContent className="p-0">
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragging(true);
-          }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          className="flex flex-col items-center justify-center gap-5 p-12 md:p-16 text-center transition-colors rounded-lg"
-        >
-          {isUploading ? (
-            <>
-              <Dna className="h-10 w-10 text-primary animate-spin" />
-              <p className="text-sm text-muted-foreground">{progress}</p>
-              {/* Progress bar */}
-              <div className="w-full max-w-xs h-2 rounded-full bg-muted overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-500 ease-out"
-                  style={{ width: `${uploadPercent}%` }}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <Dna className="h-10 w-10 text-primary animate-pulse" />
-              <div>
-                <h3 className="text-lg font-semibold">
-                  Drop your DNA file here
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Supports 23andMe, AncestryDNA, MyHeritage, and FTDNA
-                </p>
-              </div>
-              <label className="cursor-pointer">
-                <input
-                  type="file"
-                  accept=".csv,.txt,.tsv"
-                  onChange={handleFileInput}
-                  className="hidden"
-                />
-                <span className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                  <Upload className="h-4 w-4" />
-                  Browse files
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        className="flex flex-col items-center justify-center gap-4 p-10 md:p-14 text-center"
+      >
+        {isUploading ? (
+          <>
+            <Dna className="h-8 w-8 text-primary animate-spin" />
+            <p className="text-sm text-muted-foreground">{progress}</p>
+            <div className="w-full max-w-xs h-1.5 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+                style={{ width: `${uploadPercent}%` }}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="h-12 w-12 rounded-xl bg-primary/8 flex items-center justify-center">
+              <Upload className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold font-display">
+                Drop your DNA file here
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Supports 23andMe, AncestryDNA, MyHeritage, and FTDNA
+              </p>
+            </div>
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept=".csv,.txt,.tsv"
+                onChange={handleFileInput}
+                className="hidden"
+              />
+              <span className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium border border-input bg-background hover:bg-muted/50 h-9 px-5 py-2 transition-colors">
+                Browse files
+              </span>
+            </label>
+            <div className="flex items-center gap-3 mt-1">
+              {SUPPORTED_FORMATS.map((fmt) => (
+                <span
+                  key={fmt}
+                  className="text-[10px] font-mono text-muted-foreground/50 tracking-wider"
+                >
+                  {fmt}
                 </span>
-              </label>
-              {/* Format chips */}
-              <div className="flex flex-wrap justify-center gap-2 mt-1">
-                {SUPPORTED_FORMATS.map((fmt) => (
-                  <span
-                    key={fmt}
-                    className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs font-mono text-muted-foreground"
-                  >
-                    {fmt}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
+              ))}
+            </div>
+          </>
+        )}
 
-          {error && (
-            <p className="text-sm text-destructive font-medium">{error}</p>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        {error && (
+          <p className="text-sm text-destructive font-medium">{error}</p>
+        )}
+      </div>
+    </div>
   );
 }

@@ -74,16 +74,21 @@ export function ConsentGate({ children }: ConsentGateProps) {
   }
 
   return (
-    <Card className="border-2">
-      <CardHeader className="text-center pb-4">
-        <ShieldCheck className="h-10 w-10 text-primary mx-auto mb-2" />
-        <CardTitle className="font-display text-lg">Data Processing Agreement</CardTitle>
+    <Card className="border border-border/50 rounded-2xl">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+            <ShieldCheck className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <CardTitle className="font-display text-base">Data Processing Agreement</CardTitle>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Please review before uploading your genetic data
+            </p>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="space-y-5">
-        <p className="text-sm text-muted-foreground text-center">
-          Please review and acknowledge the following before uploading your
-          genetic data:
-        </p>
 
         <div className="space-y-3">
           <label className="flex items-start gap-3 cursor-pointer group">
@@ -160,7 +165,7 @@ export function ConsentGate({ children }: ConsentGateProps) {
           onClick={handleConsent}
           disabled={!allChecked}
           size="lg"
-          className="w-full bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all"
+          className="w-full rounded-full font-display bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
         >
           <Lock className="h-4 w-4 mr-2" />
           I Agree — Proceed Securely
