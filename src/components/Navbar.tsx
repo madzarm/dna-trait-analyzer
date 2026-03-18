@@ -30,32 +30,37 @@ export function Navbar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-        {/* Wordmark */}
-        <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-[family-name:var(--font-display)] font-bold text-lg tracking-tight"
-          >
-            <Dna className="h-5 w-5 text-primary" />
-            <span>DNA Trait Analyzer</span>
+    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl">
+      {/* Gradient bottom edge */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+      <div className="max-w-6xl mx-auto flex items-center justify-between h-14 px-6">
+        {/* Brand */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+              <Dna className="h-4 w-4 text-primary" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-display font-bold text-sm tracking-tight leading-none">
+                DNA Trait
+              </span>
+              <span className="font-display font-medium text-[10px] tracking-[0.12em] text-muted-foreground uppercase leading-none mt-0.5">
+                Analyzer
+              </span>
+            </div>
           </Link>
 
-          {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop nav — pill active states */}
+          <div className="hidden md:flex items-center gap-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-foreground ${
+                className={`px-3.5 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
                   isActive(link.href)
-                    ? "text-foreground"
-                    : "text-muted-foreground"
-                } after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 after:origin-left ${
-                  isActive(link.href)
-                    ? "after:scale-x-100"
-                    : "after:scale-x-0 hover:after:scale-x-100"
+                    ? "text-primary-foreground bg-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
                 {link.label}
@@ -65,73 +70,77 @@ export function Navbar() {
         </div>
 
         {/* Desktop auth */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           {loading ? (
-            <div className="h-9 w-20 animate-pulse bg-muted rounded" />
+            <div className="h-8 w-16 animate-pulse bg-muted rounded-full" />
           ) : user ? (
             <>
               <Link
                 href="/reports"
-                className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-foreground ${
+                className={`px-3.5 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
                   isActive("/reports")
-                    ? "text-foreground"
-                    : "text-muted-foreground"
-                } after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 after:origin-left ${
-                  isActive("/reports")
-                    ? "after:scale-x-100"
-                    : "after:scale-x-0 hover:after:scale-x-100"
+                    ? "text-primary-foreground bg-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                My Reports
+                Reports
               </Link>
-              <span className="text-sm text-muted-foreground hidden lg:inline">
+              <div className="h-4 w-px bg-border" />
+              <span className="text-xs text-muted-foreground hidden lg:inline truncate max-w-[140px]">
                 {user.email}
               </span>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="text-muted-foreground hover:text-foreground h-8 px-3 text-xs"
+              >
                 Sign Out
               </Button>
             </>
           ) : (
             <>
               <Link href="/auth/login">
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-3 text-xs text-muted-foreground hover:text-foreground"
+                >
                   Sign In
                 </Button>
               </Link>
               <Link href="/auth/signup">
-                <Button size="sm">Sign Up</Button>
+                <Button size="sm" className="h-8 px-4 text-xs font-display rounded-full">
+                  Get Started
+                </Button>
               </Link>
             </>
           )}
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="md:hidden h-8 w-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
-          {mobileOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-2">
+        <div className="md:hidden bg-background/98 backdrop-blur-xl border-t border-border/30">
+          <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                   isActive(link.href)
-                    ? "text-foreground bg-muted"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                 }`}
               >
                 {link.label}
@@ -139,22 +148,22 @@ export function Navbar() {
             ))}
 
             {loading ? (
-              <div className="h-9 w-full animate-pulse bg-muted rounded mt-2" />
+              <div className="h-9 w-full animate-pulse bg-muted rounded-lg mt-2" />
             ) : user ? (
               <>
                 <Link
                   href="/reports"
                   onClick={() => setMobileOpen(false)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                     isActive("/reports")
-                      ? "text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                   }`}
                 >
                   My Reports
                 </Link>
-                <div className="border-t border-border/50 my-2" />
-                <span className="px-3 text-xs text-muted-foreground">
+                <div className="border-t border-border/30 my-2" />
+                <span className="px-4 text-xs text-muted-foreground">
                   {user.email}
                 </span>
                 <Button
@@ -184,10 +193,10 @@ export function Navbar() {
                 <Link href="/auth/signup" className="flex-1">
                   <Button
                     size="sm"
-                    className="w-full"
+                    className="w-full rounded-full font-display"
                     onClick={() => setMobileOpen(false)}
                   >
-                    Sign Up
+                    Get Started
                   </Button>
                 </Link>
               </div>
