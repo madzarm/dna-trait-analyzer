@@ -548,7 +548,7 @@ export default function Home() {
             {/* Two groups side by side */}
             <div className="grid md:grid-cols-2 gap-6 md:gap-12">
               {/* Physical & Nutrition */}
-              <div className="space-y-4">
+              <div className="space-y-4 min-w-0">
                 <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
                   Physical & Nutrition
                 </span>
@@ -580,7 +580,7 @@ export default function Home() {
               </div>
 
               {/* Wellness & Health */}
-              <div className="space-y-4">
+              <div className="space-y-4 min-w-0">
                 <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
                   Wellness & Health
                 </span>
