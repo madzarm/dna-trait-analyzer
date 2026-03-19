@@ -55,7 +55,7 @@ export function TraitInput({ onSubmit, isAnalyzing }: TraitInputProps) {
             <input
               value={trait}
               onChange={(e) => setTrait(e.target.value)}
-              placeholder="Ask anything — caffeine metabolism, eye color, sleep patterns..."
+              placeholder="Ask about any trait..."
               disabled={isAnalyzing}
               className="h-full w-full bg-transparent pl-14 pr-16 text-base outline-none placeholder:text-muted-foreground/40 disabled:pointer-events-none disabled:opacity-50 rounded-2xl"
             />
@@ -79,7 +79,7 @@ export function TraitInput({ onSubmit, isAnalyzing }: TraitInputProps) {
         <p className="text-xs text-muted-foreground/50 uppercase tracking-wider font-mono">
           Popular traits to explore
         </p>
-        <div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {TRAIT_SUGGESTIONS.map((suggestion) => (
             <button
               key={suggestion.name}
