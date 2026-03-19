@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { parseDNAFile } from "@/lib/dna-parser";
 import { storeDNA } from "@/lib/dna-store";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
