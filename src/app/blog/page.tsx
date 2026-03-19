@@ -77,12 +77,12 @@ export default function BlogIndexPage() {
               {/* Accent top bar on hover */}
               <div className="h-0.5 bg-gradient-to-r from-primary/0 via-primary/40 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
               <CardContent className="pt-5 pb-5 space-y-3">
-                <div className="flex items-center gap-3 text-xs">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
                   <Badge variant="outline" className="text-[10px] text-primary border-primary/20 font-mono uppercase tracking-wider">
                     {post.category}
                   </Badge>
                   <span className="text-muted-foreground font-mono">{post.date}</span>
-                  <span className="text-muted-foreground/40">&middot;</span>
+                  <span className="text-muted-foreground/40 hidden sm:inline">&middot;</span>
                   <span className="text-muted-foreground font-mono">{post.readingTime}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
