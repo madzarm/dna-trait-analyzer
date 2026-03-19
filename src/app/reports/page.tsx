@@ -75,7 +75,7 @@ export default function ReportsPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12 md:py-16 space-y-8">
       {/* Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="space-y-2">
           <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
             Your Library
@@ -92,7 +92,7 @@ export default function ReportsPage() {
           </div>
         </div>
         <Link href="/">
-          <Button className="rounded-full font-display cursor-pointer" size="sm">
+          <Button className="rounded-full font-display cursor-pointer w-full sm:w-auto" size="sm">
             New Analysis
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
