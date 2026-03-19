@@ -149,7 +149,7 @@ export function ResultsCard({ result, reportId, onNewAnalysis }: ResultsCardProp
       </div>
 
       {/* ── Actions ── */}
-      <div className="flex items-center justify-center gap-6 print:hidden pt-2">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 print:hidden pt-2">
         <button
           onClick={onNewAnalysis}
           className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer font-medium"
@@ -158,7 +158,7 @@ export function ResultsCard({ result, reportId, onNewAnalysis }: ResultsCardProp
         </button>
         {reportId && (
           <>
-            <div className="h-4 w-px bg-border/30" />
+            <div className="hidden sm:block h-4 w-px bg-border/30" />
             <Link
               href={`/reports/${reportId}`}
               className="text-sm text-primary hover:text-primary/80 transition-colors font-medium"
