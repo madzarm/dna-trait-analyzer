@@ -50,7 +50,7 @@ export function CookieConsent() {
             </Link>
           </p>
         </div>
-        <div className="flex items-center gap-2 pl-11">
+        <div className="flex items-center gap-2 pl-0 sm:pl-11">
           <Button
             variant="ghost"
             size="sm"
