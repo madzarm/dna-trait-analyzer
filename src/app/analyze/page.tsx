@@ -179,7 +179,7 @@ function AnalyzeContent() {
         {/* Session header — instrument readout feel */}
         <div className="space-y-6">
           {/* Top bar: status readouts */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               {/* Live status indicator */}
               <div className="flex items-center gap-2 rounded-full bg-primary/8 pl-2.5 pr-3.5 py-1.5">
@@ -192,19 +192,19 @@ function AnalyzeContent() {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* SNP count readout */}
-              <div className="flex items-center gap-2 rounded-full border border-border/20 px-3.5 py-1.5">
+              <div className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/20 px-2.5 sm:px-3.5 py-1.5">
                 <Dna className="h-3.5 w-3.5 text-primary" />
                 <span className="text-xs font-bold text-foreground tabular-nums font-mono">
                   {Number(snpCount).toLocaleString()}
                 </span>
-                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider hidden sm:inline">
                   SNPs
                 </span>
               </div>
               {/* Timer */}
-              <div className="flex items-center gap-1.5 rounded-full border border-border/20 px-3 py-1.5">
+              <div className="flex items-center gap-1.5 rounded-full border border-border/20 px-2.5 sm:px-3 py-1.5">
                 <Timer className="h-3.5 w-3.5 text-muted-foreground/50" />
                 <span className="text-[10px] text-muted-foreground/50 font-mono">1h</span>
               </div>
