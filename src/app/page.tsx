@@ -102,9 +102,9 @@ export default function Home() {
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 hero-grid" />
 
-          {/* Visible warm blobs */}
+          {/* Visible warm blobs — scaled down on mobile */}
           <div
-            className="absolute top-[15%] left-[10%] h-[600px] w-[600px] rounded-full blur-[140px]"
+            className="absolute top-[15%] left-[10%] h-[300px] w-[300px] sm:h-[450px] sm:w-[450px] md:h-[600px] md:w-[600px] rounded-full blur-[100px] sm:blur-[140px]"
             style={{
               background: "var(--primary)",
               opacity: 0.06,
@@ -112,7 +112,7 @@ export default function Home() {
             }}
           />
           <div
-            className="absolute bottom-[20%] right-[5%] h-[500px] w-[500px] rounded-full blur-[120px]"
+            className="absolute bottom-[20%] right-[5%] h-[250px] w-[250px] sm:h-[375px] sm:w-[375px] md:h-[500px] md:w-[500px] rounded-full blur-[80px] sm:blur-[120px]"
             style={{
               background: "var(--accent)",
               opacity: 0.05,
@@ -120,7 +120,7 @@ export default function Home() {
             }}
           />
           <div
-            className="absolute top-[60%] left-[50%] h-[400px] w-[400px] -translate-x-1/2 rounded-full blur-[100px]"
+            className="absolute top-[60%] left-[50%] h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] -translate-x-1/2 rounded-full blur-[80px] sm:blur-[100px]"
             style={{
               background: "var(--primary)",
               opacity: 0.04,
@@ -175,7 +175,7 @@ export default function Home() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] font-display">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] font-display">
               Your DNA Has{" "}
               <span className="text-gradient">Answers</span>
             </h1>
@@ -206,11 +206,11 @@ export default function Home() {
             </div>
 
             {/* Provider strip */}
-            <div className="flex items-center gap-4 pt-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-4">
               <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
                 Works with
               </span>
-              <div className="h-px flex-1 max-w-8 bg-border/50" />
+              <div className="h-px flex-1 max-w-8 bg-border/50 hidden sm:block" />
               {["23andMe", "AncestryDNA", "MyHeritage", "FTDNA"].map((p) => (
                 <span key={p} className="text-xs text-muted-foreground/40 font-medium font-mono">
                   {p}
@@ -261,9 +261,9 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             3. HOW IT WORKS — numbered timeline, not cards
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full max-w-5xl mx-auto px-6 py-24">
+        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
-            <div className="space-y-2 mb-16">
+            <div className="space-y-2 mb-10 md:mb-16">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
                 How it works
               </p>
@@ -329,7 +329,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             4. SAMPLE PREVIEW — wider, asymmetric label
             ═══════════════════════════════════════════════════ */}
-        <section id="preview-section" className="w-full py-24 relative">
+        <section id="preview-section" className="w-full py-16 md:py-24 relative">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -466,7 +466,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             5. TRUST — horizontal rows, not card grid
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full max-w-5xl mx-auto px-6 py-24">
+        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
             <div className="space-y-2 mb-12">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
@@ -516,7 +516,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             6. EXPLORE TRAITS — grouped by category
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full py-24 relative">
+        <section className="w-full py-16 md:py-24 relative">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -656,7 +656,7 @@ export default function Home() {
             ═══════════════════════════════════════════════════ */}
         <section
           id="upload-section"
-          className="w-full max-w-2xl mx-auto px-6 py-28 relative"
+          className="w-full max-w-2xl mx-auto px-6 py-16 md:py-28 relative overflow-hidden"
         >
           {/* Subtle glow behind the upload zone */}
           <div
