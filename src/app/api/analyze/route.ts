@@ -1,11 +1,25 @@
-import { getDNA } from "@/lib/dna-store";
+import { getDNA, storeDNA } from "@/lib/dna-store";
 import { runAnalysisPipeline } from "@/lib/llm-pipeline";
 import { createClient } from "@/lib/supabase/server";
 import { checkUsageAllowance, recordUsage } from "@/lib/usage";
+import type { SNPData } from "@/lib/types";
+import { gunzipSync } from "node:zlib";
+
+export const maxDuration = 120;
+
+async function parseRequestBody(request: Request) {
+  const encoding = request.headers.get("content-encoding");
+  if (encoding === "gzip") {
+    const arrayBuffer = await request.arrayBuffer();
+    const decompressed = gunzipSync(Buffer.from(arrayBuffer));
+    return JSON.parse(decompressed.toString("utf-8"));
+  }
+  return request.json();
+}
 
 export async function POST(request: Request) {
   try {
-    const { trait, sessionId, useCommercialSources } = await request.json();
+    const { trait, sessionId, useCommercialSources, snps } = await parseRequestBody(request);
 
     if (!trait || typeof trait !== "string" || trait.trim().length === 0) {
       return new Response(
@@ -21,7 +35,25 @@ export async function POST(request: Request) {
       );
     }
 
-    const session = getDNA(sessionId);
+    // Try server-side session first, fall back to inline SNP data from client
+    let session = getDNA(sessionId);
+    if (!session && snps && typeof snps === "object") {
+      // Reconstruct session from inline SNP data sent by client
+      const dnaMap = new Map<string, SNPData>();
+      for (const [rsid, genotype] of Object.entries(snps)) {
+        dnaMap.set(rsid, {
+          rsid,
+          chromosome: "",
+          position: "",
+          result: genotype as string,
+        });
+      }
+      if (dnaMap.size > 0) {
+        storeDNA(sessionId, dnaMap, dnaMap.size);
+        session = getDNA(sessionId);
+      }
+    }
+
     if (!session) {
       return new Response(
         JSON.stringify({ error: "Session expired. Please re-upload your DNA file." }),

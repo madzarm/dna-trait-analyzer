@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { Dna, Upload } from "lucide-react";
 import { parseDNAFile } from "@/lib/dna-parser";
+import { storeClientDNA } from "@/lib/client-dna-store";
 
 interface UploadDropzoneProps {
   onUploadComplete: (sessionId: string, snpCount: number) => void;
@@ -51,14 +52,17 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
           return;
         }
 
-        // Build compact TSV string and gzip it to stay under Vercel's 4.5MB limit
+        // Store parsed SNP data client-side for use in analyze requests
         setProgress("Compressing SNP data...");
         setUploadPercent(50);
 
+        const snpEntries: Record<string, string> = {};
         const lines: string[] = [];
         for (const [rsid, snpData] of parseResult.dnaMap) {
+          snpEntries[rsid] = snpData.result;
           lines.push(`${rsid}\t${snpData.result}`);
         }
+        storeClientDNA(snpEntries, parseResult.format);
         const tsvData = lines.join("\n");
         const tsvBytes = new TextEncoder().encode(tsvData);
 

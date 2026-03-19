@@ -21,6 +21,7 @@ import {
   Lock,
 } from "lucide-react";
 import type { AnalysisResult, ProgressEvent } from "@/lib/types";
+import { getClientDNA } from "@/lib/client-dna-store";
 
 const DNA_SEQ = "ATCG TAGC AATT CCGG GCTA ATCG TGCA CTAG ";
 
@@ -48,10 +49,41 @@ function AnalyzeContent() {
       setError("");
 
       try {
+        // Build request body with inline SNP data from client store
+        const clientDNA = getClientDNA();
+        const requestBody: Record<string, unknown> = { trait, sessionId };
+        if (clientDNA) {
+          requestBody.snps = clientDNA.snps;
+        }
+
+        // Gzip the request body to stay under Vercel's 4.5MB limit
+        const jsonBytes = new TextEncoder().encode(JSON.stringify(requestBody));
+        const cs = new CompressionStream("gzip");
+        const writer = cs.writable.getWriter();
+        writer.write(jsonBytes);
+        writer.close();
+        const chunks: Uint8Array[] = [];
+        const gzReader = cs.readable.getReader();
+        while (true) {
+          const { done, value } = await gzReader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+        const totalLen = chunks.reduce((s, c) => s + c.length, 0);
+        const compressed = new Uint8Array(totalLen);
+        let off = 0;
+        for (const c of chunks) {
+          compressed.set(c, off);
+          off += c.length;
+        }
+
         const response = await fetch("/api/analyze", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ trait, sessionId }),
+          headers: {
+            "Content-Type": "application/json",
+            "Content-Encoding": "gzip",
+          },
+          body: compressed,
         });
 
         if (!response.ok) {
