@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "./AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,18 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -130,8 +142,21 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-background/98 backdrop-blur-xl border-t border-border/30">
-          <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-1">
+        <div
+          className="fixed inset-0 top-14 z-40 bg-black/40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <div
+        className={`md:hidden fixed top-14 left-0 right-0 z-50 bg-background/98 backdrop-blur-xl border-t border-border/30 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          mobileOpen
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-2 pointer-events-none"
+        }`}
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -203,7 +228,6 @@ export function Navbar() {
             )}
           </div>
         </div>
-      )}
     </nav>
   );
 }
