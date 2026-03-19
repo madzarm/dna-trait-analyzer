@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { Dna, Upload } from "lucide-react";
+import { parseDNAFile } from "@/lib/dna-parser";
 
 interface UploadDropzoneProps {
   onUploadComplete: (sessionId: string, snpCount: number) => void;
@@ -33,20 +34,45 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
 
       setIsUploading(true);
       setProgress("Reading file...");
-      setUploadPercent(20);
+      setUploadPercent(10);
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-
+        // Parse the DNA file client-side to avoid sending large files to the server
+        const fileContent = await file.text();
         setProgress("Parsing DNA data...");
+        setUploadPercent(30);
+
+        const parseResult = parseDNAFile(fileContent);
+
+        if ("error" in parseResult) {
+          setError(parseResult.error);
+          setIsUploading(false);
+          setUploadPercent(0);
+          return;
+        }
+
+        // Build a compact {rsid: genotype} map to send to server
+        setProgress("Preparing upload...");
         setUploadPercent(50);
+
+        const snpEntries: Record<string, string> = {};
+        for (const [rsid, snpData] of parseResult.dnaMap) {
+          snpEntries[rsid] = snpData.result;
+        }
+
+        setProgress("Uploading SNP data...");
+        setUploadPercent(70);
+
         const response = await fetch("/api/upload", {
           method: "POST",
-          body: formData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            snps: snpEntries,
+            format: parseResult.format,
+          }),
         });
 
-        setUploadPercent(80);
+        setUploadPercent(90);
         const data = await response.json();
 
         if (!response.ok) {
