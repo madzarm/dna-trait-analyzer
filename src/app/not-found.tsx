@@ -9,7 +9,7 @@ export default function NotFound() {
         <div className="max-w-md w-full space-y-8">
           {/* Large 404 with glow effect */}
           <div className="relative">
-            <h1 className="font-display text-[10rem] md:text-[14rem] font-bold leading-none tracking-tighter text-primary/10 select-none">
+            <h1 className="font-display text-[6rem] sm:text-[10rem] md:text-[14rem] font-bold leading-none tracking-tighter text-primary/10 select-none">
               404
             </h1>
             {/* Subtle glow behind the number */}
