@@ -51,13 +51,35 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
           return;
         }
 
-        // Build a compact {rsid: genotype} map to send to server
-        setProgress("Preparing upload...");
+        // Build compact TSV string and gzip it to stay under Vercel's 4.5MB limit
+        setProgress("Compressing SNP data...");
         setUploadPercent(50);
 
-        const snpEntries: Record<string, string> = {};
+        const lines: string[] = [];
         for (const [rsid, snpData] of parseResult.dnaMap) {
-          snpEntries[rsid] = snpData.result;
+          lines.push(`${rsid}\t${snpData.result}`);
+        }
+        const tsvData = lines.join("\n");
+        const tsvBytes = new TextEncoder().encode(tsvData);
+
+        // Gzip compress using browser native CompressionStream
+        const cs = new CompressionStream("gzip");
+        const writer = cs.writable.getWriter();
+        writer.write(tsvBytes);
+        writer.close();
+        const compressedChunks: Uint8Array[] = [];
+        const reader = cs.readable.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          compressedChunks.push(value);
+        }
+        const totalLength = compressedChunks.reduce((sum, c) => sum + c.length, 0);
+        const compressed = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of compressedChunks) {
+          compressed.set(chunk, offset);
+          offset += chunk.length;
         }
 
         setProgress("Uploading SNP data...");
@@ -65,11 +87,12 @@ export function UploadDropzone({ onUploadComplete }: UploadDropzoneProps) {
 
         const response = await fetch("/api/upload", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            snps: snpEntries,
-            format: parseResult.format,
-          }),
+          headers: {
+            "Content-Type": "application/octet-stream",
+            "X-SNP-Format": parseResult.format,
+            "Content-Encoding": "gzip",
+          },
+          body: compressed,
         });
 
         setUploadPercent(90);

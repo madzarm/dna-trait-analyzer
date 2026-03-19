@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { parseDNAFile } from "@/lib/dna-parser";
 import { storeDNA } from "@/lib/dna-store";
 import type { SNPData } from "@/lib/types";
+import { gunzipSync } from "node:zlib";
 
 export const maxDuration = 60;
 
@@ -10,7 +11,50 @@ export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") || "";
 
-    // New path: client-side parsed JSON with compact {rsid: genotype} map
+    // New path: client-side parsed, gzipped TSV (rsid\tgenotype per line)
+    if (contentType.includes("application/octet-stream")) {
+      const format = request.headers.get("x-snp-format") || "unknown";
+      const arrayBuffer = await request.arrayBuffer();
+      const compressed = Buffer.from(arrayBuffer);
+      const decompressed = gunzipSync(compressed);
+      const tsvData = decompressed.toString("utf-8");
+
+      const dnaMap = new Map<string, SNPData>();
+      const lines = tsvData.split("\n");
+      for (const line of lines) {
+        if (!line) continue;
+        const tabIdx = line.indexOf("\t");
+        if (tabIdx === -1) continue;
+        const rsid = line.substring(0, tabIdx);
+        const genotype = line.substring(tabIdx + 1);
+        if (rsid && genotype) {
+          dnaMap.set(rsid, {
+            rsid,
+            chromosome: "",
+            position: "",
+            result: genotype,
+          });
+        }
+      }
+
+      if (dnaMap.size === 0) {
+        return NextResponse.json(
+          { error: "No valid SNP data found." },
+          { status: 400 }
+        );
+      }
+
+      const sessionId = uuidv4();
+      storeDNA(sessionId, dnaMap, dnaMap.size);
+
+      return NextResponse.json({
+        sessionId,
+        snpCount: dnaMap.size,
+        format,
+      });
+    }
+
+    // JSON path: client-side parsed compact {rsid: genotype} map
     if (contentType.includes("application/json")) {
       const body = await request.json();
       const { snps, format } = body as {
