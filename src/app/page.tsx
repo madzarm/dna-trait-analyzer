@@ -516,7 +516,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             6. EXPLORE TRAITS — grouped by category
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full py-16 md:py-24 relative">
+        <section className="w-full py-16 md:py-24 relative overflow-hidden">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -546,7 +546,7 @@ export default function Home() {
             </Reveal>
 
             {/* Two groups side by side */}
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-12">
               {/* Physical & Nutrition */}
               <div className="space-y-4">
                 <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
@@ -561,7 +561,7 @@ export default function Home() {
                   <Reveal key={trait.name} delay={i * 60}>
                     <button
                       onClick={() => scrollTo("upload-section")}
-                      className="w-full text-left group flex items-center gap-4 rounded-xl border border-border/30 bg-card/50 p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card cursor-pointer"
+                      className="w-full text-left group flex items-center gap-3 sm:gap-4 rounded-xl border border-border/30 bg-card/50 p-3 sm:p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card cursor-pointer"
                     >
                       <div className="h-9 w-9 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 group-hover:bg-primary/12 transition-colors">
                         <trait.icon className="h-4 w-4 text-primary" />
@@ -569,7 +569,7 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{trait.name}</h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0">{trait.gene}</span>
+                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">{trait.gene}</span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5 truncate">{trait.fact}</p>
                       </div>
@@ -593,7 +593,7 @@ export default function Home() {
                   <Reveal key={trait.name} delay={i * 60 + 50}>
                     <button
                       onClick={() => scrollTo("upload-section")}
-                      className="w-full text-left group flex items-center gap-4 rounded-xl border border-border/30 bg-card/50 p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card cursor-pointer"
+                      className="w-full text-left group flex items-center gap-3 sm:gap-4 rounded-xl border border-border/30 bg-card/50 p-3 sm:p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card cursor-pointer"
                     >
                       <div className="h-9 w-9 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 group-hover:bg-primary/12 transition-colors">
                         <trait.icon className="h-4 w-4 text-primary" />
@@ -601,7 +601,7 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{trait.name}</h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0">{trait.gene}</span>
+                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">{trait.gene}</span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5 truncate">{trait.fact}</p>
                       </div>
