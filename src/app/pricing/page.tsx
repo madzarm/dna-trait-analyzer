@@ -204,7 +204,7 @@ function PricingContent() {
           </div>
 
           {/* Pricing Cards — 1 col mobile, 2 col md, 4 col xl */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 stagger-in">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 stagger-in">
             {plans.map((plan) => (
               <Card
                 key={plan.name}
@@ -241,7 +241,7 @@ function PricingContent() {
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div className="flex items-baseline gap-1">
-                    <span className="font-bold text-5xl font-display tabular-nums">
+                    <span className="font-bold text-4xl sm:text-5xl font-display tabular-nums">
                       {plan.price}
                     </span>
                     {plan.period && (
