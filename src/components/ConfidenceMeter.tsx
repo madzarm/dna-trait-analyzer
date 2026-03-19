@@ -101,7 +101,7 @@ export function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
         </div>
 
         {/* Tier labels below bar */}
-        <div className="relative h-4">
+        <div className="relative h-4 hidden sm:block">
           {TIERS.map((tier) => (
             <span
               key={tier.at}
@@ -109,6 +109,17 @@ export function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
               style={{ left: `${tier.at + (tier.at === 0 ? 2 : tier.at === 70 ? -3 : 0)}%` }}
             >
               {tier.label}
+            </span>
+          ))}
+        </div>
+        {/* Compact tier labels on mobile */}
+        <div className="flex justify-between sm:hidden">
+          {TIERS.map((tier) => (
+            <span
+              key={tier.at}
+              className="text-[8px] text-muted-foreground/50 uppercase tracking-wider font-mono"
+            >
+              {tier.at === 0 ? "V.Low" : tier.label}
             </span>
           ))}
         </div>
