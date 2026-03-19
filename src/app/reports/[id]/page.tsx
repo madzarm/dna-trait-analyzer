@@ -141,35 +141,37 @@ export default function ReportPage({
 
       {/* ── Report Header — matches ResultsCard ── */}
       <div className="space-y-4">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] font-medium text-primary uppercase tracking-wider font-mono mb-2">
-              Trait Report
-            </p>
-            <h1 className="font-display font-bold text-3xl md:text-4xl capitalize tracking-tight">
-              {report.trait}
-            </h1>
-            <p className="text-base text-muted-foreground mt-2 max-w-xl leading-relaxed">
-              {report.summary}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0 print:hidden">
-            <PrintReportButton />
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleShare}
-              disabled={sharing || !!shareUrl}
-              className="rounded-full cursor-pointer"
-            >
-              <Share2 className="h-3.5 w-3.5 mr-1.5" />
-              {sharing ? "..." : shareUrl ? "Shared" : "Share"}
-            </Button>
+        <div className="space-y-3 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+            <div>
+              <p className="text-[10px] font-medium text-primary uppercase tracking-wider font-mono mb-2">
+                Trait Report
+              </p>
+              <h1 className="font-display font-bold text-3xl md:text-4xl capitalize tracking-tight">
+                {report.trait}
+              </h1>
+              <p className="text-base text-muted-foreground mt-2 max-w-xl leading-relaxed">
+                {report.summary}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0 print:hidden">
+              <PrintReportButton />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleShare}
+                disabled={sharing || !!shareUrl}
+                className="rounded-full cursor-pointer"
+              >
+                <Share2 className="h-3.5 w-3.5 mr-1.5" />
+                {sharing ? "..." : shareUrl ? "Shared" : "Share"}
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Key metrics pills */}
-        <div className="flex items-center gap-2 pt-1">
+        <div className="flex flex-wrap items-center gap-2 pt-1">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/8 px-3 py-1">
             <Dna className="h-3 w-3 text-primary" />
             <span className="text-xs font-medium text-primary tabular-nums font-mono">
@@ -182,7 +184,7 @@ export default function ReportPage({
               {sourcesCount} sources
             </span>
           </span>
-          <span className="text-[10px] text-muted-foreground/40 font-mono ml-auto">
+          <span className="text-[10px] text-muted-foreground/40 font-mono sm:ml-auto">
             {new Date(report.created_at).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
@@ -265,13 +267,13 @@ export default function ReportPage({
         </div>
 
         {shareUrl ? (
-          <div className="space-y-4 pl-11">
-            <div className="flex items-center gap-2">
+          <div className="space-y-4 pl-0 sm:pl-11">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <input
                 type="text"
                 readOnly
                 value={shareUrl}
-                className="flex-1 text-xs bg-muted/30 px-4 py-2.5 rounded-xl border border-border/20 font-mono focus:outline-none focus:border-primary/30"
+                className="flex-1 text-xs bg-muted/30 px-4 py-2.5 rounded-xl border border-border/20 font-mono focus:outline-none focus:border-primary/30 min-w-0"
               />
               <Button
                 size="sm"
@@ -293,12 +295,12 @@ export default function ReportPage({
             </button>
           </div>
         ) : (
-          <div className="pl-11">
+          <div className="pl-0 sm:pl-11">
             <Button
               size="sm"
               onClick={handleShare}
               disabled={sharing}
-              className="rounded-full font-display cursor-pointer"
+              className="rounded-full font-display cursor-pointer w-full sm:w-auto"
             >
               <Share2 className="h-4 w-4 mr-1.5" />
               {sharing ? "Creating link..." : "Create Share Link"}
