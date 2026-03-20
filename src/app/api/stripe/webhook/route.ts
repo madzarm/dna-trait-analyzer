@@ -71,19 +71,24 @@ export async function POST(request: Request) {
             .eq("id", userId);
         }
 
-        // For one-time starter pack: add 10 credits
-        if (priceType === "starter") {
+        // For one-time purchases: add credits
+        if (priceType === "per_trait" || priceType === "starter") {
+          const creditsToAdd = priceType === "per_trait" ? 1 : 10;
           const { data: profile } = await supabase
             .from("profiles")
-            .select("credits_remaining")
+            .select("credits_remaining, subscription_status")
             .eq("id", userId)
             .single();
+
+          const currentStatus = profile?.subscription_status;
+          const newStatus =
+            currentStatus === "active" ? "active" : priceType === "starter" ? "starter" : currentStatus || "free";
 
           await supabase
             .from("profiles")
             .update({
-              credits_remaining: (profile?.credits_remaining || 0) + 10,
-              subscription_status: "starter",
+              credits_remaining: (profile?.credits_remaining || 0) + creditsToAdd,
+              subscription_status: newStatus,
             })
             .eq("id", userId);
         }

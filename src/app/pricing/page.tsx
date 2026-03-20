@@ -35,6 +35,21 @@ const plans = [
     priceType: null,
   },
   {
+    name: "Per Trait",
+    price: "$0.99",
+    period: "/trait",
+    description: "Pay only for what you use",
+    features: [
+      "1 trait analysis per purchase",
+      "All DNA formats supported",
+      "Full SNP matching",
+      "ClinVar + GWAS data",
+    ],
+    cta: "Buy Single Trait",
+    highlighted: false,
+    priceType: "per_trait" as const,
+  },
+  {
     name: "Starter",
     price: "$9.99",
     period: "one-time",
@@ -203,8 +218,8 @@ function PricingContent() {
             </p>
           </div>
 
-          {/* Pricing Cards — 1 col mobile, 2 col md, 4 col xl */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 stagger-in">
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 stagger-in">
             {plans.map((plan) => (
               <Card
                 key={plan.name}

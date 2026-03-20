@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
     if (!priceType || !(priceType in PRODUCTS)) {
       return NextResponse.json(
-        { error: "Invalid price type. Must be one of: starter, monthly, annual" },
+        { error: "Invalid price type. Must be one of: per_trait, starter, monthly, annual" },
         { status: 400 }
       );
     }

@@ -18,9 +18,17 @@ export const stripe = new Proxy({} as Stripe, {
   },
 });
 
-export type PriceType = "starter" | "monthly" | "annual";
+export type PriceType = "per_trait" | "starter" | "monthly" | "annual";
 
 export const PRODUCTS = {
+  per_trait: {
+    name: "Single Trait",
+    description: "1 trait analysis — one-time purchase",
+    priceId: process.env.STRIPE_PRICE_PER_TRAIT!,
+    mode: "payment" as const,
+    analyses: 1,
+    amount: 99, // $0.99
+  },
   starter: {
     name: "Starter Pack",
     description: "5 trait analyses — one-time purchase",

@@ -1170,7 +1170,7 @@ export default function Home() {
               />
               <FaqItem
                 question="Why should I use this instead of Promethease or SelfDecode?"
-                answer="Promethease has a fixed database\u2014you can only explore pre-built traits. SelfDecode costs $500+ for annual access. We research ANY trait live using the latest GWAS studies, give you haplotype-aware interpretation, and cost $9.99\u2013$99/month with a free tier included."
+                answer="Promethease has a fixed database\u2014you can only explore pre-built traits. SelfDecode costs $500+ for annual access. We research ANY trait live using the latest GWAS studies, give you haplotype-aware interpretation, and start at just $0.99 per trait with a free tier included."
               />
               <FaqItem
                 question="Can I ask about complex traits like intelligence or personality?"
@@ -1212,7 +1212,7 @@ export default function Home() {
                       Start free, upgrade when ready
                     </h3>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      3 free analyses included. Unlimited plans from $9.99/mo.
+                      3 free analyses included. Then $0.99/trait or unlimited from $14.99/mo.
                     </p>
                   </div>
                 </div>
