@@ -2,23 +2,22 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Suspense, useCallback, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TraitInput } from "@/components/TraitInput";
 import { ResultsCard } from "@/components/ResultsCard";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ConsentGate } from "@/components/ConsentGate";
+import { UsageCounter } from "@/components/UsageCounter";
 import {
   AlertCircle,
   Sparkles,
   Dna,
-  Upload,
   Timer,
   ArrowRight,
-  Search,
-  BarChart3,
   ShieldCheck,
   Lock,
+  FlaskConical,
 } from "lucide-react";
 import type { AnalysisResult, ProgressEvent } from "@/lib/types";
 import { getClientDNA } from "@/lib/client-dna-store";
@@ -30,6 +29,8 @@ function AnalyzeContent() {
   const router = useRouter();
   const sessionId = searchParams.get("session");
   const snpCount = searchParams.get("snps");
+  const isDemo = searchParams.get("demo") === "true";
+  const hasAutoTriggered = useRef(false);
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressMessages, setProgressMessages] = useState<string[]>([]);
@@ -149,6 +150,22 @@ function AnalyzeContent() {
     router.push(`/analyze?session=${newSessionId}&snps=${newSnpCount}`);
   };
 
+  // Auto-trigger caffeine analysis in demo mode
+  useEffect(() => {
+    if (!isDemo || !sessionId || result || isAnalyzing) return;
+    if (hasAutoTriggered.current) return;
+    hasAutoTriggered.current = true;
+    // Delay to ensure UI renders and client DNA store is populated
+    const timer = setTimeout(() => {
+      handleAnalyze("Caffeine metabolism");
+    }, 500);
+    return () => {
+      clearTimeout(timer);
+      // Reset on cleanup (React strict mode remounts)
+      hasAutoTriggered.current = false;
+    };
+  }, [isDemo, sessionId, result, isAnalyzing, handleAnalyze]);
+
   /* ── Empty state: no DNA loaded — upload directly here ── */
   if (!sessionId) {
     return (
@@ -223,8 +240,19 @@ function AnalyzeContent() {
                   Session Active
                 </span>
               </div>
+              {/* Demo mode badge */}
+              {isDemo && (
+                <div className="flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5">
+                  <FlaskConical className="h-3.5 w-3.5 text-accent" />
+                  <span className="text-[10px] font-medium text-accent uppercase tracking-wider font-mono">
+                    Demo
+                  </span>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Usage counter */}
+              <UsageCounter isDemo={isDemo} />
               {/* SNP count readout */}
               <div className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/20 px-2.5 sm:px-3.5 py-1.5">
                 <Dna className="h-3.5 w-3.5 text-primary" />
