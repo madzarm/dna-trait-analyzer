@@ -2,6 +2,7 @@ import { getDNA, storeDNA } from "@/lib/dna-store";
 import { runAnalysisPipeline } from "@/lib/llm-pipeline";
 import { createClient } from "@/lib/supabase/server";
 import { checkUsageAllowance, recordUsage } from "@/lib/usage";
+import { DEMO_SESSION_PREFIX } from "@/lib/demo-data";
 import type { SNPData } from "@/lib/types";
 import { gunzipSync } from "node:zlib";
 
@@ -65,18 +66,23 @@ export async function POST(request: Request) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Check usage allowance
-    const allowance = await checkUsageAllowance(user?.id, sessionId);
-    if (!allowance.allowed) {
-      return new Response(
-        JSON.stringify({
-          error: "You've used all your free analyses. Upgrade your plan to continue.",
-          code: "USAGE_LIMIT_EXCEEDED",
-          remaining: 0,
-          plan: allowance.plan,
-        }),
-        { status: 402, headers: { "Content-Type": "application/json" } }
-      );
+    // Demo sessions skip usage checks
+    const isDemoSession = typeof sessionId === "string" && sessionId.startsWith(DEMO_SESSION_PREFIX);
+
+    // Check usage allowance (skip for demo)
+    if (!isDemoSession) {
+      const allowance = await checkUsageAllowance(user?.id, sessionId);
+      if (!allowance.allowed) {
+        return new Response(
+          JSON.stringify({
+            error: "You've used all your free analyses. Upgrade your plan to continue.",
+            code: "USAGE_LIMIT_EXCEEDED",
+            remaining: 0,
+            plan: allowance.plan,
+          }),
+          { status: 402, headers: { "Content-Type": "application/json" } }
+        );
+      }
     }
 
     const encoder = new TextEncoder();
@@ -114,8 +120,10 @@ export async function POST(request: Request) {
             reportId = report?.id ?? null;
           }
 
-          // Record usage (decrements credits for free/starter users)
-          await recordUsage(user?.id, sessionId, reportId ?? undefined);
+          // Record usage (decrements credits for free/starter users, skip for demo)
+          if (!isDemoSession) {
+            await recordUsage(user?.id, sessionId, reportId ?? undefined);
+          }
 
           send({ type: "result", data: result, reportId });
         } catch (err) {
