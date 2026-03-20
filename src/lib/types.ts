@@ -82,3 +82,20 @@ export interface ProgressEvent {
   data?: AnalysisResult;
   reportId?: string;
 }
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface TraitChatRequest {
+  message: string;
+  history: ChatMessage[];
+  context: AnalysisResult;
+}
+
+export interface TraitChatEvent {
+  type: "delta" | "done" | "error";
+  text?: string;
+  message?: string;
+}
