@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { parseDNAFile } from "@/lib/dna-parser";
 import { storeDNA } from "@/lib/dna-store";
+import { DEMO_SESSION_PREFIX } from "@/lib/demo-data";
 import type { SNPData } from "@/lib/types";
 import { gunzipSync } from "node:zlib";
 
@@ -86,7 +87,9 @@ export async function POST(request: Request) {
         );
       }
 
-      const sessionId = uuidv4();
+      // Demo uploads get a demo-prefixed session ID for usage exemption
+      const isDemo = typeof format === "string" && format.startsWith("demo-");
+      const sessionId = isDemo ? `${DEMO_SESSION_PREFIX}${uuidv4()}` : uuidv4();
       storeDNA(sessionId, dnaMap, dnaMap.size);
 
       return NextResponse.json({
