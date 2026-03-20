@@ -3,6 +3,7 @@
 import { ConfidenceMeter } from "./ConfidenceMeter";
 import { SnpTable } from "./SnpTable";
 import { PrintReportButton } from "./PrintReportButton";
+import { SocialShareButtons } from "./SocialShareButtons";
 import { Beaker, Dna, BookOpen, ShieldCheck } from "lucide-react";
 import type { AnalysisResult } from "@/lib/types";
 import Link from "next/link";
@@ -147,6 +148,9 @@ export function ResultsCard({ result, reportId, onNewAnalysis }: ResultsCardProp
           </div>
         </div>
       </div>
+
+      {/* ── Share ── */}
+      <SocialShareButtons trait={result.trait} summary={result.summary} />
 
       {/* ── Actions ── */}
       <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 print:hidden pt-2">
