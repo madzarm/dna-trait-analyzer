@@ -263,6 +263,80 @@
   50% { transform: translate(-50%, -50%) scale(1.15); }
 }
 
+/* ── Chat: Living Text Stream ─────────────────────────── */
+
+/* Text materializes: blur-to-focus + subtle upward shift */
+@keyframes chat-materialize {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(1px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.chat-materialize {
+  display: inline;
+  animation: chat-materialize 180ms ease-out both;
+}
+
+/* Message entrance: spring-like overshoot + settle */
+@keyframes chat-spring-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.004);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.chat-spring-in {
+  animation: chat-spring-in 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Left border pulses while analyst is streaming */
+@keyframes chat-border-glow {
+  0%, 100% {
+    border-color: rgba(52, 217, 168, 0.15);
+  }
+  50% {
+    border-color: rgba(52, 217, 168, 0.45);
+  }
+}
+
+.chat-border-pulse {
+  animation: chat-border-glow 1.8s ease-in-out infinite;
+}
+
+/* Reduced motion: no animations, instant rendering */
+@media (prefers-reduced-motion: reduce) {
+  .chat-materialize {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .chat-spring-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .chat-border-pulse {
+    animation: none;
+    border-color: rgba(52, 217, 168, 0.3);
+  }
+}
+
 .card-hover-glow {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
