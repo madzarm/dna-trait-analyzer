@@ -1107,13 +1107,13 @@ export default function Home() {
                   <TableRow className="border-border/20 hover:bg-primary/[0.02]">
                     <TableCell className="text-sm font-medium">Price</TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$9.99\u2013$99/mo" />
+                      <ComparisonMark value="$9.99–$99/mo" />
                     </TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$5\u201310 once" />
+                      <ComparisonMark value="$5–10 once" />
                     </TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$9.99\u2013$538/mo" />
+                      <ComparisonMark value="$9.99–$538/mo" />
                     </TableCell>
                   </TableRow>
                   {/* Free tier row */}
