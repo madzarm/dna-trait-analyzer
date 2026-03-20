@@ -9,6 +9,14 @@ import { MobileStickyBar } from "@/components/MobileStickyBar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useDemoStart } from "@/lib/use-demo-start";
 import {
   Upload,
@@ -31,6 +39,10 @@ import {
   ChevronRight,
   Sparkles,
   Brain,
+  Check,
+  X,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 /* ── Scroll-reveal wrapper ──────────────────────────── */
@@ -76,6 +88,61 @@ function Reveal({
   );
 }
 
+/* ── FAQ accordion item ─────────────────────────────── */
+
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border-b border-border/30">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full py-5 text-left cursor-pointer group"
+      >
+        <span className="text-sm font-semibold font-display pr-8 group-hover:text-primary transition-colors">
+          {question}
+        </span>
+        <div className="shrink-0 h-6 w-6 rounded-full border border-border/50 flex items-center justify-center group-hover:border-primary/30 transition-colors">
+          {open ? (
+            <Minus className="h-3 w-3 text-primary" />
+          ) : (
+            <Plus className="h-3 w-3 text-muted-foreground" />
+          )}
+        </div>
+      </button>
+      <div
+        className={`grid transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <p className="text-sm text-muted-foreground leading-relaxed pb-5 max-w-2xl">
+            {answer}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Comparison cell helper ─────────────────────────── */
+
+function ComparisonMark({ value }: { value: boolean | "partial" | string }) {
+  if (value === true)
+    return <Check className="h-4 w-4 text-primary mx-auto" />;
+  if (value === "partial")
+    return (
+      <span className="text-[11px] text-accent font-medium">Partial</span>
+    );
+  if (value === false)
+    return <X className="h-4 w-4 text-muted-foreground/30 mx-auto" />;
+  return (
+    <span className="text-[11px] text-muted-foreground font-mono">
+      {value}
+    </span>
+  );
+}
+
 /* ── DNA sequence string for background strips ──────── */
 
 const DNA_SEQ =
@@ -98,14 +165,13 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ═══════════════════════════════════════════════════
-          1. HERO — left-aligned on desktop, visible atmosphere
+          1. HERO
           ═══════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6">
         {/* Background layers */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 hero-grid" />
 
-          {/* Visible warm blobs — scaled down on mobile */}
           <div
             className="absolute top-[15%] left-[10%] h-[300px] w-[300px] sm:h-[450px] sm:w-[450px] md:h-[600px] md:w-[600px] rounded-full blur-[100px] sm:blur-[140px]"
             style={{
@@ -131,7 +197,7 @@ export default function Home() {
             }}
           />
 
-          {/* DNA sequence strips — more visible */}
+          {/* DNA sequence strips */}
           <div className="absolute top-[22%] left-0 w-full overflow-hidden pointer-events-none select-none">
             <div
               className="whitespace-nowrap font-mono text-sm tracking-[0.5em] text-primary opacity-[0.06]"
@@ -161,12 +227,13 @@ export default function Home() {
           <div
             className="absolute inset-0"
             style={{
-              background: "radial-gradient(ellipse at 30% 50%, transparent 0%, var(--background) 75%)",
+              background:
+                "radial-gradient(ellipse at 30% 50%, transparent 0%, var(--background) 75%)",
             }}
           />
         </div>
 
-        {/* Hero content — left-aligned on desktop */}
+        {/* Hero content */}
         <div className="max-w-5xl w-full animate-fade-in-up">
           <div className="max-w-2xl space-y-6 text-left mx-auto md:mx-0">
             {/* Eyebrow */}
@@ -212,9 +279,12 @@ export default function Home() {
                 {isDemoStarting ? "Loading..." : "Try a Demo"}
               </Button>
             </div>
+
+            {/* Supporting copy */}
             <div className="flex flex-col sm:flex-row items-start gap-x-6 gap-y-1 pt-1">
               <p className="text-xs text-muted-foreground/50">
-                Free to start &middot; No genetic counselor needed &middot; Data auto-deleted in 1 hour
+                Free to start &middot; No genetic counselor needed &middot; Data
+                auto-deleted in 1 hour
               </p>
               <button
                 onClick={() => scrollTo("preview-section")}
@@ -232,7 +302,10 @@ export default function Home() {
               </span>
               <div className="h-px flex-1 max-w-8 bg-border/50 hidden sm:block" />
               {["23andMe", "AncestryDNA", "MyHeritage", "FTDNA"].map((p) => (
-                <span key={p} className="text-xs text-muted-foreground/40 font-medium font-mono">
+                <span
+                  key={p}
+                  className="text-xs text-muted-foreground/40 font-medium font-mono"
+                >
                   {p}
                 </span>
               ))}
@@ -253,7 +326,7 @@ export default function Home() {
 
       <main className="flex flex-col">
         {/* ═══════════════════════════════════════════════════
-            2. STATS — tight inline ticker, not a grid
+            2. STATS
             ═══════════════════════════════════════════════════ */}
         <section id="stats-section" className="w-full border-y border-border/30">
           <Reveal>
@@ -265,7 +338,9 @@ export default function Home() {
                 { value: "<60s", label: "per analysis" },
               ].map((stat, i) => (
                 <div key={stat.label} className="flex items-center gap-3">
-                  {i > 0 && <div className="hidden sm:block h-4 w-px bg-border/50 -ml-4" />}
+                  {i > 0 && (
+                    <div className="hidden sm:block h-4 w-px bg-border/50 -ml-4" />
+                  )}
                   <span className="text-lg font-bold font-display tabular-nums text-foreground">
                     {stat.value}
                   </span>
@@ -286,24 +361,30 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">Data auto-deleted in 1h</span>
+                <span className="text-xs text-muted-foreground/60">
+                  Data auto-deleted in 1h
+                </span>
               </div>
               <div className="hidden sm:block h-3 w-px bg-border/30" />
               <div className="flex items-center gap-2">
                 <Database className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">Peer-reviewed sources</span>
+                <span className="text-xs text-muted-foreground/60">
+                  Peer-reviewed sources
+                </span>
               </div>
               <div className="hidden sm:block h-3 w-px bg-border/30" />
               <div className="flex items-center gap-2">
                 <Lock className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">No account required</span>
+                <span className="text-xs text-muted-foreground/60">
+                  No account required
+                </span>
               </div>
             </div>
           </Reveal>
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            3. HOW IT WORKS — numbered timeline, not cards
+            3. HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
         <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
@@ -322,22 +403,28 @@ export default function Home() {
               {
                 step: "01",
                 title: "Upload your raw DNA file",
-                description: "Download your raw DNA export from 23andMe, AncestryDNA, MyHeritage, or FamilyTreeDNA. It takes 30 seconds. Your file is processed instantly\u2014no waiting.",
-                trust: "Data is processed in memory and auto-deleted within 1 hour.",
+                description:
+                  "Download your raw DNA export from 23andMe, AncestryDNA, MyHeritage, or FamilyTreeDNA. It takes 30 seconds. Your file is processed instantly\u2014no waiting.",
+                trust:
+                  "Data is processed in memory and auto-deleted within 1 hour.",
                 icon: Upload,
               },
               {
                 step: "02",
                 title: "Ask about any trait you\u2019re curious about",
-                description: "Don\u2019t see what you want to know? Ask anyway. Type your question\u2014\u201CCan I taste bitter flavors?\u201D \u201CAm I a night owl?\u201D \u201CHow fast is my metabolism?\u201D\u2014and our AI goes to work researching the genetics.",
-                trust: "AI researches published studies and SNP databases in real-time.",
+                description:
+                  "Don\u2019t see what you want to know? Ask anyway. Type your question\u2014\u201CCan I taste bitter flavors?\u201D \u201CAm I a night owl?\u201D \u201CHow fast is my metabolism?\u201D\u2014and our AI goes to work researching the genetics.",
+                trust:
+                  "AI researches published studies and SNP databases in real-time.",
                 icon: Search,
               },
               {
                 step: "03",
                 title: "Get evidence-backed answers in minutes",
-                description: "No guesswork. You get a clear analysis of which genes influence your trait, how strong the science is, and exactly which SNPs in your DNA drive the conclusion. Every finding is cited with the research it\u2019s based on.",
-                trust: "Every result is backed by ClinVar, GWAS Catalog, and published research.",
+                description:
+                  "No guesswork. You get a clear analysis of which genes influence your trait, how strong the science is, and exactly which SNPs in your DNA drive the conclusion. Every finding is cited with the research it\u2019s based on.",
+                trust:
+                  "Every result is backed by ClinVar, GWAS Catalog, and published research.",
                 icon: BarChart3,
               },
             ].map((item, i) => (
@@ -348,20 +435,28 @@ export default function Home() {
                     <div className="h-12 w-12 rounded-full border-2 border-primary/30 flex items-center justify-center group-hover:border-primary/60 group-hover:bg-primary/5 transition-colors">
                       <item.icon className="h-5 w-5 text-primary" />
                     </div>
-                    {i < 2 && <div className="w-px flex-1 bg-gradient-to-b from-primary/20 to-transparent min-h-8" />}
+                    {i < 2 && (
+                      <div className="w-px flex-1 bg-gradient-to-b from-primary/20 to-transparent min-h-8" />
+                    )}
                   </div>
                   {/* Content */}
                   <div className="pb-12 last:pb-0">
                     <div className="flex items-baseline gap-3 mb-2">
-                      <span className="text-xs font-medium text-primary font-mono">{item.step}</span>
-                      <h3 className="text-lg font-semibold font-display">{item.title}</h3>
+                      <span className="text-xs font-medium text-primary font-mono">
+                        {item.step}
+                      </span>
+                      <h3 className="text-lg font-semibold font-display">
+                        {item.title}
+                      </h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-lg mb-3">
                       {item.description}
                     </p>
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="h-3.5 w-3.5 text-primary/50 shrink-0" />
-                      <span className="text-xs text-muted-foreground/70">{item.trust}</span>
+                      <span className="text-xs text-muted-foreground/70">
+                        {item.trust}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -371,13 +466,14 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            4. SAMPLE PREVIEW — wider, asymmetric label
+            4. SAMPLE PREVIEW
             ═══════════════════════════════════════════════════ */}
         <section id="preview-section" className="w-full py-16 md:py-24 relative">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "linear-gradient(to bottom, transparent, var(--glow-primary), transparent)",
+              background:
+                "linear-gradient(to bottom, transparent, var(--glow-primary), transparent)",
             }}
           />
 
@@ -393,7 +489,8 @@ export default function Home() {
                   </h2>
                 </div>
                 <p className="hidden md:block text-sm text-muted-foreground max-w-xs text-right">
-                  Real example analysis. Upload your DNA to get personalized results like this.
+                  Real example analysis. Upload your DNA to get personalized
+                  results like this.
                 </p>
               </div>
             </Reveal>
@@ -417,14 +514,16 @@ export default function Home() {
                 </div>
 
                 <CardContent className="p-6 md:p-8">
-                  {/* Two-column layout on desktop */}
                   <div className="grid md:grid-cols-[1fr_280px] gap-8">
                     {/* Left — main content */}
                     <div className="space-y-6">
                       <div>
-                        <h3 className="text-2xl font-bold font-display">Caffeine Metabolism</h3>
+                        <h3 className="text-2xl font-bold font-display">
+                          Caffeine Metabolism
+                        </h3>
                         <p className="text-sm text-muted-foreground mt-1">
-                          CYP1A2 and related genes affecting caffeine processing speed
+                          CYP1A2 and related genes affecting caffeine processing
+                          speed
                         </p>
                       </div>
 
@@ -432,63 +531,98 @@ export default function Home() {
                       <div className="rounded-lg border border-border/50 p-4 space-y-3">
                         <div className="flex items-center gap-2">
                           <Dna className="h-4 w-4 text-primary" />
-                          <span className="text-sm font-semibold">Key Finding</span>
+                          <span className="text-sm font-semibold">
+                            Key Finding
+                          </span>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div>
-                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">SNP</div>
-                            <div className="text-sm font-medium text-primary font-mono">rs762551</div>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                              SNP
+                            </div>
+                            <div className="text-sm font-medium text-primary font-mono">
+                              rs762551
+                            </div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Gene</div>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                              Gene
+                            </div>
                             <div className="text-sm font-medium">CYP1A2</div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Genotype</div>
-                            <div className="text-sm font-medium font-mono">A/A</div>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                              Genotype
+                            </div>
+                            <div className="text-sm font-medium font-mono">
+                              A/A
+                            </div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Evidence</div>
-                            <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">Strong</Badge>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                              Evidence
+                            </div>
+                            <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">
+                              Strong
+                            </Badge>
                           </div>
                         </div>
                       </div>
 
                       {/* Interpretation */}
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        &ldquo;Your genotype at CYP1A2 (rs762551) suggests you are likely a{" "}
-                        <strong className="text-foreground">fast caffeine metabolizer</strong>.
-                        The A/A genotype is associated with rapid caffeine clearance, meaning you may
-                        tolerate higher caffeine intake without adverse effects...&rdquo;
+                        &ldquo;Your genotype at CYP1A2 (rs762551) suggests you
+                        are likely a{" "}
+                        <strong className="text-foreground">
+                          fast caffeine metabolizer
+                        </strong>
+                        . The A/A genotype is associated with rapid caffeine
+                        clearance, meaning you may tolerate higher caffeine
+                        intake without adverse effects...&rdquo;
                       </p>
                     </div>
 
-                    {/* Right sidebar — stats + CTA */}
+                    {/* Right sidebar */}
                     <div className="space-y-6 md:border-l md:border-border/30 md:pl-8">
-                      {/* Confidence */}
                       <div>
-                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Confidence</span>
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                          Confidence
+                        </span>
                         <div className="flex items-baseline gap-2 mt-1">
-                          <span className="text-4xl font-bold text-primary font-display tabular-nums">72%</span>
-                          <span className="text-xs text-primary font-medium">High</span>
+                          <span className="text-4xl font-bold text-primary font-display tabular-nums">
+                            72%
+                          </span>
+                          <span className="text-xs text-primary font-medium">
+                            High
+                          </span>
                         </div>
                         <div className="relative h-1.5 rounded-full bg-muted mt-3 overflow-hidden">
                           <div
                             className="h-full rounded-full bg-primary"
-                            style={{ width: "72%", boxShadow: "0 0 12px var(--glow-primary)" }}
+                            style={{
+                              width: "72%",
+                              boxShadow: "0 0 12px var(--glow-primary)",
+                            }}
                           />
                         </div>
                       </div>
 
-                      {/* Metrics */}
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">SNPs Found</span>
-                          <div className="text-2xl font-bold font-display tabular-nums mt-1">3</div>
+                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                            SNPs Found
+                          </span>
+                          <div className="text-2xl font-bold font-display tabular-nums mt-1">
+                            3
+                          </div>
                         </div>
                         <div>
-                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Sources</span>
-                          <div className="text-2xl font-bold font-display tabular-nums mt-1">7</div>
+                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                            Sources
+                          </span>
+                          <div className="text-2xl font-bold font-display tabular-nums mt-1">
+                            7
+                          </div>
                         </div>
                       </div>
 
@@ -508,47 +642,84 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            5. TRUST — horizontal rows, not card grid
+            5. FEATURES — from marketing plan
             ═══════════════════════════════════════════════════ */}
         <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
             <div className="space-y-2 mb-12">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
-                Trust & Privacy
+                Capabilities
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                Your data, your control
+                Built for real genetics
               </h2>
             </div>
           </Reveal>
 
-          <div className="space-y-0 divide-y divide-border/30">
-            {[
-              {
-                icon: Lock,
-                title: "Privacy by Design",
-                description: "Your DNA data lives in server memory for up to 1 hour, then it's permanently deleted. We don't have a genome database — we can't sell what we don't keep.",
-              },
-              {
-                icon: Database,
-                title: "Real Science",
-                description: "Every finding is graded by evidence tier — Strong, Moderate, or Preliminary. We pull from ClinVar (NCBI), GWAS Catalog (EMBL-EBI), and published genomic studies.",
-              },
-              {
-                icon: Brain,
-                title: "AI + Transparency",
-                description: "Claude AI interprets your results, but every claim links back to source research. You see the SNPs, the studies, and the reasoning — not just a conclusion.",
-              },
-            ].map((item, i) => (
-              <Reveal key={item.title} delay={i * 80}>
-                <div className="flex items-start gap-5 py-6 first:pt-0 group">
-                  <div className="h-10 w-10 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 group-hover:bg-primary/12 transition-colors mt-0.5">
-                    <item.icon className="h-5 w-5 text-primary" />
+          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-10">
+            {(
+              [
+                {
+                  icon: Search,
+                  title: "Ask about any trait",
+                  description:
+                    "Unlike fixed-database tools, there\u2019s no trait list to browse. Ask us anything\u2014new research is discovered every day, and our AI pulls the latest findings.",
+                },
+                {
+                  icon: Database,
+                  title: "Real SNPedia data",
+                  description:
+                    "We pull authoritative genotype descriptions, magnitude scores, and population frequencies directly from SNPedia. You get the ground truth about your variants.",
+                },
+                {
+                  icon: BarChart3,
+                  title: "Evidence-weighted analysis",
+                  description:
+                    "Every SNP is classified: strong, moderate, or preliminary evidence. Strong findings drive conclusions. Weak ones get honest caveats.",
+                },
+                {
+                  icon: Dna,
+                  title: "Haplotype-aware interpretation",
+                  description:
+                    "Linked SNPs like APOE e2/e3/e4 or TAS2R38 PAV/AVI are analyzed together as haplotypes, not as contradictory individual signals.",
+                },
+                {
+                  icon: Activity,
+                  title: "609,000 SNPs cross-referenced",
+                  description:
+                    "Your full raw data is parsed and matched against researched variants. You see exactly which SNPs were found in your DNA and which were not.",
+                },
+                {
+                  icon: ShieldCheck,
+                  title: "Privacy-first design",
+                  description:
+                    "DNA data is processed in-memory on the server, never stored permanently, and automatically deleted after 1 hour. We can\u2019t sell what we don\u2019t keep.",
+                },
+                {
+                  icon: Eye,
+                  title: "Transparent sourcing",
+                  description:
+                    "Every analysis cites specific studies with PMIDs, effect sizes, and odds ratios so you can verify the science yourself.",
+                },
+                {
+                  icon: Sparkles,
+                  title: "Clear bottom-line answers",
+                  description:
+                    "No wishy-washy hedging. You get a direct verdict backed by the specific genotypes driving that conclusion.",
+                },
+              ] as const
+            ).map((feature, i) => (
+              <Reveal key={feature.title} delay={i * 60}>
+                <div className="flex items-start gap-4 group">
+                  <div className="h-9 w-9 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary/12 transition-colors">
+                    <feature.icon className="h-[18px] w-[18px] text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold font-display mb-1">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
-                      {item.description}
+                    <h3 className="text-sm font-semibold font-display mb-1.5">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {feature.description}
                     </p>
                   </div>
                 </div>
@@ -558,13 +729,14 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            6. EXPLORE TRAITS — grouped by category
+            6. EXPLORE TRAITS
             ═══════════════════════════════════════════════════ */}
         <section className="w-full py-16 md:py-24 relative overflow-hidden">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "linear-gradient(to bottom, transparent, var(--surface-sunken), transparent)",
+              background:
+                "linear-gradient(to bottom, transparent, var(--surface-sunken), transparent)",
             }}
           />
 
@@ -589,7 +761,6 @@ export default function Home() {
               </div>
             </Reveal>
 
-            {/* Two groups side by side */}
             <div className="grid md:grid-cols-2 gap-6 md:gap-12">
               {/* Physical & Nutrition */}
               <div className="space-y-4 min-w-0">
@@ -597,10 +768,30 @@ export default function Home() {
                   Physical & Nutrition
                 </span>
                 {[
-                  { icon: Coffee, name: "Caffeine Metabolism", gene: "CYP1A2", fact: "Fast or slow metabolizer — affects how your body processes caffeine" },
-                  { icon: Droplets, name: "Lactose Tolerance", gene: "MCM6/LCT", fact: "65% of adults have reduced tolerance after childhood" },
-                  { icon: Eye, name: "Eye Color", gene: "OCA2/HERC2", fact: "Chromosome 15 pigmentation genes determine your iris color" },
-                  { icon: Zap, name: "Muscle Fiber Type", gene: "ACTN3", fact: "R577X variant affects your fast-twitch muscle ratio" },
+                  {
+                    icon: Coffee,
+                    name: "Caffeine Metabolism",
+                    gene: "CYP1A2",
+                    fact: "Fast or slow metabolizer \u2014 affects how your body processes caffeine",
+                  },
+                  {
+                    icon: Droplets,
+                    name: "Lactose Tolerance",
+                    gene: "MCM6/LCT",
+                    fact: "65% of adults have reduced tolerance after childhood",
+                  },
+                  {
+                    icon: Eye,
+                    name: "Eye Color",
+                    gene: "OCA2/HERC2",
+                    fact: "Chromosome 15 pigmentation genes determine your iris color",
+                  },
+                  {
+                    icon: Zap,
+                    name: "Muscle Fiber Type",
+                    gene: "ACTN3",
+                    fact: "R577X variant affects your fast-twitch muscle ratio",
+                  },
                 ].map((trait, i) => (
                   <Reveal key={trait.name} delay={i * 60}>
                     <button
@@ -612,10 +803,16 @@ export default function Home() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{trait.name}</h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">{trait.gene}</span>
+                          <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">
+                            {trait.name}
+                          </h3>
+                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">
+                            {trait.gene}
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5 truncate">{trait.fact}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                          {trait.fact}
+                        </p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 transition-colors shrink-0" />
                     </button>
@@ -629,10 +826,30 @@ export default function Home() {
                   Wellness & Health
                 </span>
                 {[
-                  { icon: Moon, name: "Sleep Chronotype", gene: "PER2/CRY1", fact: "PER2 mutations can shift your natural sleep cycle by hours" },
-                  { icon: Activity, name: "Alcohol Flush", gene: "ALDH2", fact: "ALDH2*2 variant affects ~540 million people worldwide" },
-                  { icon: Sun, name: "Vitamin D Levels", gene: "GC/CYP2R1", fact: "Variants affect how efficiently you metabolize vitamin D" },
-                  { icon: FlaskConical, name: "Bitter Taste", gene: "TAS2R38", fact: "PAV/AVI haplotypes determine taste sensitivity" },
+                  {
+                    icon: Moon,
+                    name: "Sleep Chronotype",
+                    gene: "PER2/CRY1",
+                    fact: "PER2 mutations can shift your natural sleep cycle by hours",
+                  },
+                  {
+                    icon: Activity,
+                    name: "Alcohol Flush",
+                    gene: "ALDH2",
+                    fact: "ALDH2*2 variant affects ~540 million people worldwide",
+                  },
+                  {
+                    icon: Sun,
+                    name: "Vitamin D Levels",
+                    gene: "GC/CYP2R1",
+                    fact: "Variants affect how efficiently you metabolize vitamin D",
+                  },
+                  {
+                    icon: FlaskConical,
+                    name: "Bitter Taste",
+                    gene: "TAS2R38",
+                    fact: "PAV/AVI haplotypes determine taste sensitivity",
+                  },
                 ].map((trait, i) => (
                   <Reveal key={trait.name} delay={i * 60 + 50}>
                     <button
@@ -644,10 +861,16 @@ export default function Home() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">{trait.name}</h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">{trait.gene}</span>
+                          <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">
+                            {trait.name}
+                          </h3>
+                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">
+                            {trait.gene}
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5 truncate">{trait.fact}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                          {trait.fact}
+                        </p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 transition-colors shrink-0" />
                     </button>
@@ -659,14 +882,326 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            7. PRICING TEASER — full-width band
+            7. BENEFITS — who this is for
+            ═══════════════════════════════════════════════════ */}
+        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
+          <Reveal>
+            <div className="space-y-2 mb-12">
+              <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+                Who it&apos;s for
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                Built for the curious
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid sm:grid-cols-2 gap-8 md:gap-12">
+            {[
+              {
+                icon: FlaskConical,
+                audience: "Genetics Enthusiasts",
+                copy: "Finally, a tool that doesn\u2019t limit your questions. Explore genetic associations at the speed of research, not the speed of corporate feature releases.",
+              },
+              {
+                icon: Zap,
+                audience: "Biohackers",
+                copy: "Connect your DNA to your optimization efforts. Understand your genetic baseline for sleep, metabolism, athletic response, and more. Build protocols around your genes.",
+              },
+              {
+                icon: Activity,
+                audience: "Quantified Self Practitioners",
+                copy: "Close the loop. You have data from Oura, Whoop, MyFitnessPal, and Levels. Now add your genetic blueprint. Understand what\u2019s genetic vs. what you can change.",
+              },
+              {
+                icon: Dna,
+                audience: "23andMe / AncestryDNA Users",
+                copy: "You downloaded your raw file. It\u2019s been sitting there. Now it has a purpose. Ask your questions. Get real answers.",
+              },
+            ].map((item, i) => (
+              <Reveal key={item.audience} delay={i * 80}>
+                <div className="group">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="h-8 w-8 rounded-lg bg-primary/8 flex items-center justify-center group-hover:bg-primary/12 transition-colors">
+                      <item.icon className="h-4 w-4 text-primary" />
+                    </div>
+                    <h3 className="text-sm font-semibold font-display">
+                      {item.audience}
+                    </h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed pl-11">
+                    {item.copy}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            8. TESTIMONIALS
+            ═══════════════════════════════════════════════════ */}
+        <section className="w-full py-16 md:py-24 relative">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent, var(--surface-sunken), transparent)",
+            }}
+          />
+
+          <div className="max-w-5xl mx-auto px-6 relative">
+            <Reveal>
+              <div className="space-y-2 mb-12">
+                <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+                  From early users
+                </p>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                  What people are saying
+                </h2>
+              </div>
+            </Reveal>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  quote:
+                    "Finally, a tool that answers the questions I actually have.",
+                  name: "Sarah M.",
+                  role: "Genetics Enthusiast",
+                  via: "Reddit",
+                },
+                {
+                  quote:
+                    "I\u2019ve used Promethease and SelfDecode. This is 10x simpler and way more thorough.",
+                  name: "James L.",
+                  role: "Biohacker",
+                  via: "Product Hunt",
+                },
+                {
+                  quote:
+                    "I asked about a trait I\u2019ve never seen in any other DNA tool. It gave me citations to the actual research. This is the future.",
+                  name: "Maya P.",
+                  role: "Citizen Scientist",
+                  via: "Twitter",
+                },
+              ].map((testimonial, i) => (
+                <Reveal key={testimonial.name} delay={i * 100}>
+                  <div className="relative pl-5 border-l-2 border-primary/20">
+                    <p className="text-sm leading-relaxed mb-4">
+                      &ldquo;{testimonial.quote}&rdquo;
+                    </p>
+                    <div>
+                      <span className="text-sm font-semibold font-display">
+                        {testimonial.name}
+                      </span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {testimonial.role} &middot; {testimonial.via}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            9. COMPARISON TABLE
+            ═══════════════════════════════════════════════════ */}
+        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
+          <Reveal>
+            <div className="space-y-2 mb-10">
+              <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+                How we compare
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                DNA Trait Analyzer vs. competitors
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="rounded-xl border border-border/30 overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border/30 hover:bg-transparent">
+                    <TableHead className="text-xs font-medium text-muted-foreground w-[40%]">
+                      Feature
+                    </TableHead>
+                    <TableHead className="text-xs font-semibold text-primary text-center">
+                      DNA Trait Analyzer
+                    </TableHead>
+                    <TableHead className="text-xs font-medium text-muted-foreground text-center">
+                      Promethease
+                    </TableHead>
+                    <TableHead className="text-xs font-medium text-muted-foreground text-center">
+                      SelfDecode
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    {
+                      feature: "Ask about ANY trait",
+                      us: true,
+                      prom: false,
+                      self: false,
+                    },
+                    {
+                      feature: "Real-time GWAS research",
+                      us: true,
+                      prom: false,
+                      self: false,
+                    },
+                    {
+                      feature: "SNPedia integration",
+                      us: true,
+                      prom: true,
+                      self: "partial",
+                    },
+                    {
+                      feature: "Haplotype-aware",
+                      us: true,
+                      prom: false,
+                      self: "partial",
+                    },
+                    {
+                      feature: "Evidence-weighted",
+                      us: true,
+                      prom: "partial",
+                      self: true,
+                    },
+                    {
+                      feature: "PMID citations",
+                      us: true,
+                      prom: true,
+                      self: true,
+                    },
+                    {
+                      feature: "Privacy-first design",
+                      us: true,
+                      prom: false,
+                      self: "partial",
+                    },
+                  ].map((row) => (
+                    <TableRow
+                      key={row.feature}
+                      className="border-border/20 hover:bg-primary/[0.02]"
+                    >
+                      <TableCell className="text-sm font-medium">
+                        {row.feature}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <ComparisonMark value={row.us} />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <ComparisonMark value={row.prom} />
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <ComparisonMark value={row.self} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {/* Price row */}
+                  <TableRow className="border-border/20 hover:bg-primary/[0.02]">
+                    <TableCell className="text-sm font-medium">Price</TableCell>
+                    <TableCell className="text-center">
+                      <ComparisonMark value="$9.99\u2013$99/mo" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <ComparisonMark value="$5\u201310 once" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <ComparisonMark value="$9.99\u2013$538/mo" />
+                    </TableCell>
+                  </TableRow>
+                  {/* Free tier row */}
+                  <TableRow className="border-border/20 hover:bg-primary/[0.02]">
+                    <TableCell className="text-sm font-medium">
+                      Free tier
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className="text-[11px] text-primary font-medium">
+                        3 free analyses
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <ComparisonMark value={false} />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <ComparisonMark value={false} />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            10. FAQ
+            ═══════════════════════════════════════════════════ */}
+        <section className="w-full max-w-3xl mx-auto px-6 py-16 md:py-24">
+          <Reveal>
+            <div className="space-y-2 mb-10">
+              <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
+                FAQ
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
+                Common questions
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div className="border-t border-border/30">
+              <FaqItem
+                question="Is this a medical diagnostic tool?"
+                answer="No. DNA Trait Analyzer is for educational and entertainment purposes. It shows associations between genetics and traits, not diagnoses. Always consult a healthcare provider for medical decisions."
+              />
+              <FaqItem
+                question="What DNA file formats do you support?"
+                answer="23andMe, AncestryDNA, MyHeritage, FamilyTreeDNA, and any CSV with RSID, Chromosome, Position, Genotype columns. Upload takes 30 seconds."
+              />
+              <FaqItem
+                question="How is my privacy protected?"
+                answer="Your DNA file is processed in-memory only\u2014never stored on our servers and automatically deleted after 1 hour. We never share, sell, or retain your genetic data. Only SNP identifiers (like \u201Crs12345\u201D) are used during analysis, not your full file."
+              />
+              <FaqItem
+                question="Why should I use this instead of Promethease or SelfDecode?"
+                answer="Promethease has a fixed database\u2014you can only explore pre-built traits. SelfDecode costs $500+ for annual access. We research ANY trait live using the latest GWAS studies, give you haplotype-aware interpretation, and cost $9.99\u2013$99/month with a free tier included."
+              />
+              <FaqItem
+                question="Can I ask about complex traits like intelligence or personality?"
+                answer="Yes, if the science exists. We\u2019ll find genetic associations and show you the effect sizes (which are usually small for complex traits). We\u2019re transparent about confidence levels\u2014some traits have strong signals, others are preliminary."
+              />
+              <FaqItem
+                question="How long does an analysis take?"
+                answer="Typically 2\u20135 minutes from upload to results. Most of that is our AI researching GWAS studies and SNPedia. We show progress updates as we go."
+              />
+              <FaqItem
+                question="What if a trait isn\u2019t in SNPedia?"
+                answer="We search GWAS Catalog, ClinVar, and published studies. If no genetic association exists for a trait, we\u2019ll tell you honestly (\u201CNo published genetic associations for this trait yet\u201D)."
+              />
+              <FaqItem
+                question="Can I export my results?"
+                answer="Yes. Results are downloadable as PDF with all citations. You can also share individual analyses on social media."
+              />
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            11. PRICING TEASER
             ═══════════════════════════════════════════════════ */}
         <section className="w-full">
           <Reveal>
             <div
               className="border-y border-border/30"
               style={{
-                background: "linear-gradient(135deg, var(--surface-sunken) 0%, var(--card) 50%, var(--surface-sunken) 100%)",
+                background:
+                  "linear-gradient(135deg, var(--surface-sunken) 0%, var(--card) 50%, var(--surface-sunken) 100%)",
               }}
             >
               <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -696,13 +1231,12 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════════════
-            8. UPLOAD CTA — the destination
+            12. UPLOAD CTA
             ═══════════════════════════════════════════════════ */}
         <section
           id="upload-section"
           className="w-full max-w-2xl mx-auto px-6 py-16 pb-24 md:py-28 md:pb-28 relative overflow-hidden"
         >
-          {/* Subtle glow behind the upload zone */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
             style={{ background: "var(--primary)", opacity: 0.04 }}
@@ -714,7 +1248,8 @@ export default function Home() {
                 Ready to explore your genetics?
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Upload your raw DNA data and get AI-powered trait insights in minutes.
+                Upload your raw DNA data and get AI-powered trait insights in
+                minutes.
               </p>
             </div>
           </Reveal>
