@@ -1107,7 +1107,7 @@ export default function Home() {
                   <TableRow className="border-border/20 hover:bg-primary/[0.02]">
                     <TableCell className="text-sm font-medium">Price</TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$9.99–$99/mo" />
+                      <ComparisonMark value="$0.99/trait or $9.99–$99/mo" />
                     </TableCell>
                     <TableCell className="text-center">
                       <ComparisonMark value="$5–10 once" />
