@@ -73,7 +73,7 @@ export async function POST(request: Request) {
 
         // For one-time purchases: add credits
         if (priceType === "per_trait" || priceType === "starter") {
-          const creditsToAdd = priceType === "per_trait" ? 1 : 10;
+          const creditsToAdd = priceType === "per_trait" ? 1 : 20;
           const { data: profile } = await supabase
             .from("profiles")
             .select("credits_remaining, subscription_status")

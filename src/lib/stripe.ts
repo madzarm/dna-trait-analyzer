@@ -31,10 +31,10 @@ export const PRODUCTS = {
   },
   starter: {
     name: "Starter Pack",
-    description: "5 trait analyses — one-time purchase",
+    description: "20 trait analyses — one-time purchase",
     priceId: process.env.STRIPE_PRICE_STARTER!,
     mode: "payment" as const,
-    analyses: 5,
+    analyses: 20,
     amount: 999, // $9.99
   },
   monthly: {

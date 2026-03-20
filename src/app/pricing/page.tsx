@@ -69,7 +69,7 @@ const creditPlans: Plan[] = [
     period: "one-time",
     description: "For curious explorers who want more",
     features: [
-      "10 trait analyses",
+      "20 trait analyses",
       "All DNA formats supported",
       "Enhanced SNP matching",
       "ClinVar + GWAS data",
