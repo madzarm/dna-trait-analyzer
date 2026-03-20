@@ -5,9 +5,11 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ConsentGate } from "@/components/ConsentGate";
+import { MobileStickyBar } from "@/components/MobileStickyBar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useDemoStart } from "@/lib/use-demo-start";
 import {
   Upload,
   Search,
@@ -83,6 +85,7 @@ const DNA_SEQ =
 
 export default function Home() {
   const router = useRouter();
+  const { startDemo, isStarting: isDemoStarting } = useDemoStart();
 
   const handleUploadComplete = (sessionId: string, snpCount: number) => {
     router.push(`/analyze?session=${sessionId}&snps=${snpCount}`);
@@ -187,21 +190,36 @@ export default function Home() {
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-start gap-3 pt-2">
               <Button
                 size="lg"
                 onClick={() => scrollTo("upload-section")}
                 className="h-13 px-8 text-base font-display rounded-full bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all cursor-pointer"
               >
                 <Upload className="h-5 w-5 mr-2" />
-                Upload Your DNA File
+                Discover What Your DNA Says
               </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={startDemo}
+                disabled={isDemoStarting}
+                className="h-13 px-6 text-base font-display rounded-full border-primary/30 text-primary hover:bg-primary/10 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
+              >
+                <FlaskConical className="h-5 w-5 mr-2" />
+                {isDemoStarting ? "Loading..." : "Try a Demo"}
+              </Button>
+            </div>
+            <div className="flex flex-col sm:flex-row items-start gap-x-6 gap-y-1 pt-1">
+              <p className="text-xs text-muted-foreground/50">
+                Free · No credit card · Data auto-deleted in 1 hour
+              </p>
               <button
                 onClick={() => scrollTo("preview-section")}
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer h-13 px-1"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer"
               >
-                See a sample analysis
-                <ArrowRight className="h-4 w-4" />
+                See example results
+                <ArrowRight className="h-3 w-3" />
               </button>
             </div>
 
@@ -254,6 +272,30 @@ export default function Home() {
                   </span>
                 </div>
               ))}
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════
+            2b. SOCIAL PROOF — inline trust badges
+            ═══════════════════════════════════════════════════ */}
+        <section className="w-full max-w-5xl mx-auto px-6 py-5">
+          <Reveal>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-3.5 w-3.5 text-primary/50" />
+                <span className="text-xs text-muted-foreground/60">Data auto-deleted in 1h</span>
+              </div>
+              <div className="hidden sm:block h-3 w-px bg-border/30" />
+              <div className="flex items-center gap-2">
+                <Database className="h-3.5 w-3.5 text-primary/50" />
+                <span className="text-xs text-muted-foreground/60">Peer-reviewed sources</span>
+              </div>
+              <div className="hidden sm:block h-3 w-px bg-border/30" />
+              <div className="flex items-center gap-2">
+                <Lock className="h-3.5 w-3.5 text-primary/50" />
+                <span className="text-xs text-muted-foreground/60">No account required</span>
+              </div>
             </div>
           </Reveal>
         </section>
@@ -656,7 +698,7 @@ export default function Home() {
             ═══════════════════════════════════════════════════ */}
         <section
           id="upload-section"
-          className="w-full max-w-2xl mx-auto px-6 py-16 md:py-28 relative overflow-hidden"
+          className="w-full max-w-2xl mx-auto px-6 py-16 pb-24 md:py-28 md:pb-28 relative overflow-hidden"
         >
           {/* Subtle glow behind the upload zone */}
           <div
@@ -691,6 +733,9 @@ export default function Home() {
           </Reveal>
         </section>
       </main>
+
+      {/* Sticky mobile CTA bar */}
+      <MobileStickyBar />
     </div>
   );
 }
