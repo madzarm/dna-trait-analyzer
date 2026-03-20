@@ -179,14 +179,16 @@ export default function Home() {
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] font-display">
-              Your DNA Has{" "}
-              <span className="text-gradient">Answers</span>
+              Ask Your DNA{" "}
+              <span className="text-gradient">Anything</span>.
             </h1>
 
-            {/* Subtitle */}
+            {/* Subheadline */}
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Upload your raw genetic data from any major provider. Ask about any
-              trait. Get research-backed insights in under a minute.
+              Upload your raw DNA file and ask about any trait&mdash;caffeine
+              metabolism, lactose intolerance, bitter taste perception, athletic
+              potential. Our AI researches the genetics live, cross-references your
+              actual DNA, and gives you evidence-backed answers in minutes.
             </p>
 
             {/* CTAs */}
@@ -197,7 +199,7 @@ export default function Home() {
                 className="h-13 px-8 text-base font-display rounded-full bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all cursor-pointer"
               >
                 <Upload className="h-5 w-5 mr-2" />
-                Discover What Your DNA Says
+                Upload Your DNA &amp; Start Exploring
               </Button>
               <Button
                 variant="outline"
@@ -212,7 +214,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col sm:flex-row items-start gap-x-6 gap-y-1 pt-1">
               <p className="text-xs text-muted-foreground/50">
-                Free · No credit card · Data auto-deleted in 1 hour
+                Free to start &middot; No genetic counselor needed &middot; Data auto-deleted in 1 hour
               </p>
               <button
                 onClick={() => scrollTo("preview-section")}
@@ -257,7 +259,7 @@ export default function Home() {
           <Reveal>
             <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
               {[
-                { value: "15,000+", label: "SNPs analyzed" },
+                { value: "609,000+", label: "SNPs cross-referenced" },
                 { value: "3", label: "research databases" },
                 { value: "3-tier", label: "evidence grading" },
                 { value: "<60s", label: "per analysis" },
@@ -310,7 +312,7 @@ export default function Home() {
                 How it works
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                Three steps to discovery
+                See what your DNA can tell you
               </h2>
             </div>
           </Reveal>
@@ -319,22 +321,22 @@ export default function Home() {
             {[
               {
                 step: "01",
-                title: "Upload your DNA file",
-                description: "Drag and drop your raw data from 23andMe, AncestryDNA, MyHeritage, or FTDNA. We support .csv, .txt, and .tsv formats.",
+                title: "Upload your raw DNA file",
+                description: "Download your raw DNA export from 23andMe, AncestryDNA, MyHeritage, or FamilyTreeDNA. It takes 30 seconds. Your file is processed instantly\u2014no waiting.",
                 trust: "Data is processed in memory and auto-deleted within 1 hour.",
                 icon: Upload,
               },
               {
                 step: "02",
-                title: "Ask about any trait",
-                description: "Type any trait you're curious about — caffeine metabolism, eye color, sleep patterns, muscle composition — anything.",
+                title: "Ask about any trait you\u2019re curious about",
+                description: "Don\u2019t see what you want to know? Ask anyway. Type your question\u2014\u201CCan I taste bitter flavors?\u201D \u201CAm I a night owl?\u201D \u201CHow fast is my metabolism?\u201D\u2014and our AI goes to work researching the genetics.",
                 trust: "AI researches published studies and SNP databases in real-time.",
                 icon: Search,
               },
               {
                 step: "03",
-                title: "Get research-backed results",
-                description: "Receive a detailed analysis with confidence ratings, evidence tiers, and peer-reviewed citations for every finding.",
+                title: "Get evidence-backed answers in minutes",
+                description: "No guesswork. You get a clear analysis of which genes influence your trait, how strong the science is, and exactly which SNPs in your DNA drive the conclusion. Every finding is cited with the research it\u2019s based on.",
                 trust: "Every result is backed by ClinVar, GWAS Catalog, and published research.",
                 icon: BarChart3,
               },
