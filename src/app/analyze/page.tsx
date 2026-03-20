@@ -6,6 +6,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TraitInput } from "@/components/TraitInput";
 import { ResultsCard } from "@/components/ResultsCard";
+import { TraitChat } from "@/components/TraitChat";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ConsentGate } from "@/components/ConsentGate";
 import { UsageCounter } from "@/components/UsageCounter";
@@ -378,15 +379,18 @@ function AnalyzeContent() {
 
         {/* Results */}
         {result && (
-          <ResultsCard
-            result={result}
-            reportId={reportId}
-            onNewAnalysis={() => {
-              setResult(null);
-              setReportId(null);
-              setProgressMessages([]);
-            }}
-          />
+          <>
+            <ResultsCard
+              result={result}
+              reportId={reportId}
+              onNewAnalysis={() => {
+                setResult(null);
+                setReportId(null);
+                setProgressMessages([]);
+              }}
+            />
+            <TraitChat result={result} />
+          </>
         )}
       </div>
     </div>
