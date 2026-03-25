@@ -45,3 +45,8 @@ next-env.d.ts
 *.png
 .playwright-mcp/
 supabase/.temp/
+
+# Runtime
+.beads/
+.claude/
+.runtime/
