@@ -22,24 +22,14 @@ function StreamingText({
   isStreaming: boolean;
 }) {
   const [committed, setCommitted] = useState(0);
-  const reducedMotion = useRef(false);
+  const reducedMotion = useRef(
+    typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
   useEffect(() => {
-    reducedMotion.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-  }, []);
-
-  useEffect(() => {
-    if (!isStreaming || reducedMotion.current) {
-      setCommitted(content.length);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setCommitted(content.length);
-    }, 120);
-
+    const delay = !isStreaming || reducedMotion.current ? 0 : 120;
+    const timer = setTimeout(() => setCommitted(content.length), delay);
     return () => clearTimeout(timer);
   }, [content, isStreaming]);
 

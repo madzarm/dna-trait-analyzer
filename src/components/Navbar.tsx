@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "./AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -31,6 +33,48 @@ export function Navbar() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  // Focus trap and Escape key for mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const menu = mobileMenuRef.current;
+    if (!menu) return;
+
+    // Focus first link in menu
+    const focusableEls = menu.querySelectorAll<HTMLElement>(
+      'a, button, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableEls.length > 0) {
+      focusableEls[0].focus();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        mobileToggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab" || focusableEls.length === 0) return;
+      const first = focusableEls[0];
+      const last = focusableEls[focusableEls.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileOpen]);
+
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    mobileToggleRef.current?.focus();
+  }, []);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -132,8 +176,11 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <button
+          ref={mobileToggleRef}
           className="md:hidden h-8 w-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav-menu"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -144,11 +191,13 @@ export function Navbar() {
       {mobileOpen && (
         <div
           className="fixed inset-0 top-14 z-40 bg-black/40 md:hidden"
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobile}
           aria-hidden="true"
         />
       )}
       <div
+        ref={mobileMenuRef}
+        id="mobile-nav-menu"
         role="navigation"
         aria-label="Mobile menu"
         className={`md:hidden fixed top-14 left-0 right-0 z-50 bg-background/98 backdrop-blur-xl border-t border-border/30 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -163,7 +212,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={closeMobile}
                 className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                   isActive(link.href)
                     ? "text-primary bg-primary/10"
@@ -180,7 +229,7 @@ export function Navbar() {
               <>
                 <Link
                   href="/reports"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={closeMobile}
                   className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                     isActive("/reports")
                       ? "text-primary bg-primary/10"
@@ -198,7 +247,7 @@ export function Navbar() {
                   size="sm"
                   onClick={() => {
                     handleSignOut();
-                    setMobileOpen(false);
+                    closeMobile();
                   }}
                   className="mt-1"
                 >
@@ -212,7 +261,7 @@ export function Navbar() {
                     variant="ghost"
                     size="sm"
                     className="w-full"
-                    onClick={() => setMobileOpen(false)}
+                    onClick={closeMobile}
                   >
                     Sign In
                   </Button>
@@ -221,7 +270,7 @@ export function Navbar() {
                   <Button
                     size="sm"
                     className="w-full rounded-full font-display"
-                    onClick={() => setMobileOpen(false)}
+                    onClick={closeMobile}
                   >
                     Analyze DNA
                   </Button>

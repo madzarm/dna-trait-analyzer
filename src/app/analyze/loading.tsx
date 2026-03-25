@@ -22,11 +22,11 @@ export default function AnalyzeLoading() {
             </div>
             <div className="flex flex-wrap gap-2">
               <div className="h-5 w-8 bg-muted animate-pulse rounded" />
-              {Array.from({ length: 6 }).map((_, i) => (
+              {[72, 88, 64, 96, 76, 84].map((w, i) => (
                 <div
                   key={i}
                   className="h-5 bg-muted animate-pulse rounded-full"
-                  style={{ width: `${60 + Math.random() * 40}px` }}
+                  style={{ width: `${w}px` }}
                 />
               ))}
             </div>
