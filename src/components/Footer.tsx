@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Dna, ShieldCheck, Database, BookOpen } from "lucide-react";
+import { Dna, ShieldCheck, Database, Lock } from "lucide-react";
 
 export function Footer() {
   return (
@@ -91,7 +91,7 @@ export function Footer() {
               {[
                 { icon: ShieldCheck, text: "Evidence-graded results" },
                 { icon: Database, text: "ClinVar & GWAS Catalog data" },
-                { icon: BookOpen, text: "Your data is never stored" },
+                { icon: Lock, text: "Your data is never stored" },
               ].map((item) => (
                 <div key={item.text} className="flex items-center gap-2">
                   <item.icon className="h-3.5 w-3.5 text-primary/60 shrink-0" />

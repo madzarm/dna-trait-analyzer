@@ -89,14 +89,21 @@ function Reveal({
 
 /* ── FAQ accordion item ─────────────────────────────── */
 
+let faqIdCounter = 0;
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
+  const [ids] = useState(() => {
+    const id = ++faqIdCounter;
+    return { question: `faq-q-${id}`, answer: `faq-a-${id}` };
+  });
 
   return (
     <div className="border-b border-border/30">
       <button
+        id={ids.question}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
+        aria-controls={ids.answer}
         className="flex items-center justify-between w-full py-5 text-left cursor-pointer group"
       >
         <span className="text-sm font-semibold font-display pr-8 group-hover:text-primary transition-colors">
@@ -111,6 +118,9 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         </div>
       </button>
       <div
+        id={ids.answer}
+        role="region"
+        aria-labelledby={ids.question}
         className={`grid transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
@@ -132,7 +142,7 @@ function ComparisonMark({ value }: { value: boolean | "partial" | string }) {
     return <Check className="h-4 w-4 text-primary mx-auto" />;
   if (value === "partial")
     return (
-      <span className="text-[11px] text-accent font-medium">Partial</span>
+      <span className="text-[11px] text-muted-foreground font-medium">Partial</span>
     );
   if (value === false)
     return <X className="h-4 w-4 text-muted-foreground/30 mx-auto" />;
@@ -261,7 +271,7 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => scrollTo("upload-section")}
-                className="h-13 px-8 text-base font-display rounded-full bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all cursor-pointer"
+                className="h-12 px-8 text-base font-display rounded-full bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all cursor-pointer"
               >
                 <Dna className="h-5 w-5 mr-2" />
                 Analyze My DNA — Free
@@ -270,7 +280,7 @@ export default function Home() {
                 size="lg"
                 onClick={startDemo}
                 disabled={isDemoStarting}
-                className="h-13 px-6 text-base font-display rounded-full bg-card border border-primary/20 text-foreground hover:bg-primary/10 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
+                className="h-12 px-6 text-base font-display rounded-full bg-card border border-primary/20 text-foreground hover:bg-primary/10 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
               >
                 <FlaskConical className="h-5 w-5 mr-2" />
                 {isDemoStarting ? "Loading..." : "See a Live Example"}
@@ -285,7 +295,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => scrollTo("preview-section")}
-                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors cursor-pointer"
               >
                 See a sample analysis ↓
               </button>
@@ -293,14 +303,14 @@ export default function Home() {
 
             {/* Provider strip */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-4">
-              <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+              <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">
                 Compatible with
               </span>
               <div className="h-px flex-1 max-w-8 bg-border/50 hidden sm:block" />
               {["23andMe", "AncestryDNA", "MyHeritage", "FTDNA"].map((p) => (
                 <span
                   key={p}
-                  className="text-xs text-muted-foreground/50 font-medium font-mono"
+                  className="text-xs text-muted-foreground/70 font-medium font-mono"
                 >
                   {p}
                 </span>
@@ -320,7 +330,7 @@ export default function Home() {
         </button>
       </section>
 
-      <main className="flex flex-col">
+      <main id="main-content" className="flex flex-col">
         {/* ═══════════════════════════════════════════════════
             2. STATS
             ═══════════════════════════════════════════════════ */}
@@ -335,7 +345,7 @@ export default function Home() {
               ].map((stat, i) => (
                 <div key={stat.label} className="flex items-center gap-3">
                   {i > 0 && (
-                    <div className="hidden sm:block h-4 w-px bg-border/50 -ml-4" />
+                    <div className="hidden sm:block h-4 w-px bg-border/50" aria-hidden="true" />
                   )}
                   <span className="text-lg font-bold font-display tabular-nums text-foreground">
                     {stat.value}
@@ -382,7 +392,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             3. HOW IT WORKS
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
+        <section id="how-it-works" className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
             <div className="space-y-2 mb-10 md:mb-16">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
@@ -640,7 +650,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             5. FEATURES — from marketing plan
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
+        <section id="features" className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
             <div className="space-y-2 mb-12">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
@@ -727,7 +737,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             6. EXPLORE TRAITS
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full py-16 md:py-24 relative overflow-hidden">
+        <section id="explore-traits" className="w-full py-16 md:py-24 relative overflow-hidden">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -804,7 +814,7 @@ export default function Home() {
                           <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">
                             {trait.name}
                           </h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">
+                          <span className="text-[10px] font-medium text-muted-foreground/60 font-mono ml-2 shrink-0 hidden sm:inline">
                             {trait.gene}
                           </span>
                         </div>
@@ -862,7 +872,7 @@ export default function Home() {
                           <h3 className="text-sm font-semibold group-hover:text-primary transition-colors">
                             {trait.name}
                           </h3>
-                          <span className="text-[10px] font-medium text-muted-foreground/40 font-mono ml-2 shrink-0 hidden sm:inline">
+                          <span className="text-[10px] font-medium text-muted-foreground/60 font-mono ml-2 shrink-0 hidden sm:inline">
                             {trait.gene}
                           </span>
                         </div>
@@ -882,7 +892,7 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════
             7. BENEFITS — who this is for
             ═══════════════════════════════════════════════════ */}
-        <section className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
+        <section id="who-its-for" className="w-full max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Reveal>
             <div className="space-y-2 mb-12">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
@@ -982,19 +992,19 @@ export default function Home() {
                 },
               ].map((testimonial, i) => (
                 <Reveal key={testimonial.name} delay={i * 100}>
-                  <div className="relative pl-5 border-l-2 border-primary/20">
+                  <blockquote className="relative pl-5 border-l-2 border-primary/20">
                     <p className="text-sm leading-relaxed mb-4">
                       &ldquo;{testimonial.quote}&rdquo;
                     </p>
-                    <div>
+                    <footer>
                       <span className="text-sm font-semibold font-display">
                         {testimonial.name}
                       </span>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         via {testimonial.via}
                       </p>
-                    </div>
-                  </div>
+                    </footer>
+                  </blockquote>
                 </Reveal>
               ))}
             </div>
@@ -1017,7 +1027,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="rounded-xl border border-border/30 overflow-hidden">
+            <div className="rounded-xl border border-border/30 overflow-hidden overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/30 hover:bg-transparent">

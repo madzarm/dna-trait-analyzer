@@ -40,10 +40,9 @@ export function MobileStickyBar() {
         Analyze My DNA — Free
       </Button>
       <Button
-        variant="outline"
         onClick={startDemo}
         disabled={isStarting}
-        className="h-11 rounded-full border-primary/30 text-primary cursor-pointer"
+        className="h-11 rounded-full bg-card border border-primary/20 text-foreground hover:bg-primary/10 cursor-pointer"
       >
         <FlaskConical className="h-4 w-4 mr-1" />
         Live Example

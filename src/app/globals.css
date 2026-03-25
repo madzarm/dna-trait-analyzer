@@ -318,8 +318,17 @@
   animation: chat-border-glow 1.8s ease-in-out infinite;
 }
 
-/* Reduced motion: no animations, instant rendering */
+/* Reduced motion: no animations, instant rendering (DESIGN-SPEC 9.3) */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .chat-materialize {
     animation: none;
     opacity: 1;

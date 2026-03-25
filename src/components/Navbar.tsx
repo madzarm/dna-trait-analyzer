@@ -149,6 +149,8 @@ export function Navbar() {
         />
       )}
       <div
+        role="navigation"
+        aria-label="Mobile menu"
         className={`md:hidden fixed top-14 left-0 right-0 z-50 bg-background/98 backdrop-blur-xl border-t border-border/30 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           mobileOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
