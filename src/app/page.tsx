@@ -38,7 +38,6 @@ import {
   Database,
   ChevronRight,
   Sparkles,
-  Brain,
   Check,
   X,
   Plus,
