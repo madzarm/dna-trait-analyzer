@@ -410,7 +410,7 @@ export default function Home() {
                 step: "01",
                 title: "Upload your raw DNA file",
                 description:
-                  "Drag and drop your raw data export from 23andMe, AncestryDNA, MyHeritage, or FTDNA. Your file is parsed instantly \u2014 we identify over 600,000 genetic variants.",
+                  "Drag and drop your raw data export from 23andMe, AncestryDNA, MyHeritage, or FTDNA. Your file is parsed instantly — we identify over 600,000 genetic variants.",
                 trust:
                   "Processed in memory only. Never stored. Auto-deleted in 1 hour.",
                 icon: Upload,
@@ -419,7 +419,7 @@ export default function Home() {
                 step: "02",
                 title: "Ask any question about your traits",
                 description:
-                  "Type what you\u2019re curious about \u2014 caffeine sensitivity, sleep patterns, bitter taste, athletic potential. There\u2019s no preset list. Our AI searches published genetics research in real time to answer YOUR question.",
+                  "Type what you’re curious about — caffeine sensitivity, sleep patterns, bitter taste, athletic potential. There’s no preset list. Our AI searches published genetics research in real time to answer YOUR question.",
                 trust:
                   "Cross-references ClinVar, GWAS Catalog, and published studies live.",
                 icon: Search,
@@ -428,7 +428,7 @@ export default function Home() {
                 step: "03",
                 title: "Get cited, evidence-graded results",
                 description:
-                  "Every finding comes with the specific SNPs in your DNA, the published research behind it, and a clear confidence rating \u2014 strong, moderate, or preliminary. No guesswork. No vague percentages.",
+                  "Every finding comes with the specific SNPs in your DNA, the published research behind it, and a clear confidence rating — strong, moderate, or preliminary. No guesswork. No vague percentages.",
                 trust:
                   "Every claim links to published studies with PMIDs you can verify.",
                 icon: BarChart3,
@@ -667,45 +667,45 @@ export default function Home() {
               [
                 {
                   icon: Search,
-                  title: "Ask about any trait \u2014 no limits",
+                  title: "Ask about any trait — no limits",
                   description:
-                    "There\u2019s no preset list of traits. You type the question; our AI searches the latest published genetics research to answer it. New studies are discovered daily.",
+                    "There’s no preset list of traits. You type the question; our AI searches the latest published genetics research to answer it. New studies are discovered daily.",
                 },
                 {
                   icon: Database,
                   title: "Your variants, explained by SNPedia",
                   description:
-                    "See what SNPedia \u2014 the largest genotype wiki \u2014 says about your specific variants. Magnitude scores, population frequencies, and clinical relevance for every match.",
+                    "See what SNPedia — the largest genotype wiki — says about your specific variants. Magnitude scores, population frequencies, and clinical relevance for every match.",
                 },
                 {
                   icon: BarChart3,
                   title: "Every finding is evidence-graded",
                   description:
-                    "Strong, moderate, or preliminary \u2014 every SNP match is rated by the strength of published research behind it. Strong evidence drives conclusions. Weak evidence gets honest caveats.",
+                    "Strong, moderate, or preliminary — every SNP match is rated by the strength of published research behind it. Strong evidence drives conclusions. Weak evidence gets honest caveats.",
                 },
                 {
                   icon: Dna,
-                  title: "Haplotype-aware \u2014 linked genes analyzed together",
+                  title: "Haplotype-aware — linked genes analyzed together",
                   description:
-                    "SNPs that work together (like APOE e2/e3/e4 for Alzheimer\u2019s risk, or TAS2R38 PAV/AVI for bitter taste) are interpreted as a group, not as contradictory signals.",
+                    "SNPs that work together (like APOE e2/e3/e4 for Alzheimer’s risk, or TAS2R38 PAV/AVI for bitter taste) are interpreted as a group, not as contradictory signals.",
                 },
                 {
                   icon: Activity,
                   title: "609,000+ variants cross-referenced",
                   description:
-                    "Your entire raw data file is parsed and compared against known genetic associations. You see exactly which variants were found in your DNA \u2014 and which weren\u2019t.",
+                    "Your entire raw data file is parsed and compared against known genetic associations. You see exactly which variants were found in your DNA — and which weren’t.",
                 },
                 {
                   icon: ShieldCheck,
                   title: "Your data is never stored",
                   description:
-                    "DNA files are processed in memory, never written to disk, and automatically deleted within 1 hour. We can\u2019t sell what we don\u2019t keep.",
+                    "DNA files are processed in memory, never written to disk, and automatically deleted within 1 hour. We can’t sell what we don’t keep.",
                 },
                 {
                   icon: Eye,
                   title: "Verify every claim yourself",
                   description:
-                    "Every finding cites the specific studies it\u2019s based on \u2014 PMIDs, effect sizes, and odds ratios included. Nothing is a black box.",
+                    "Every finding cites the specific studies it’s based on — PMIDs, effect sizes, and odds ratios included. Nothing is a black box.",
                 },
                 {
                   icon: Sparkles,
@@ -780,7 +780,7 @@ export default function Home() {
                     icon: Coffee,
                     name: "Caffeine Metabolism",
                     gene: "CYP1A2",
-                    fact: "Fast or slow metabolizer \u2014 affects how your body processes caffeine",
+                    fact: "Fast or slow metabolizer — affects how your body processes caffeine",
                   },
                   {
                     icon: Droplets,
@@ -909,22 +909,22 @@ export default function Home() {
               {
                 icon: FlaskConical,
                 audience: "Genetics Enthusiasts",
-                copy: "Other tools give you a fixed list of traits. We let you ask about anything \u2014 and our AI searches the latest published research to answer it. No waiting for feature updates.",
+                copy: "Other tools give you a fixed list of traits. We let you ask about anything — and our AI searches the latest published research to answer it. No waiting for feature updates.",
               },
               {
                 icon: Zap,
                 audience: "Biohackers",
-                copy: "Your DNA is the foundation of every protocol. Understand your genetic baseline for caffeine metabolism, sleep chronotype, vitamin absorption, and muscle fiber composition \u2014 then optimize accordingly.",
+                copy: "Your DNA is the foundation of every protocol. Understand your genetic baseline for caffeine metabolism, sleep chronotype, vitamin absorption, and muscle fiber composition — then optimize accordingly.",
               },
               {
                 icon: Activity,
                 audience: "Quantified Self Practitioners",
-                copy: "You track with Oura, Whoop, and Levels. Now add the one data layer that never changes \u2014 your genetics. Understand what\u2019s hardwired vs. what you can optimize.",
+                copy: "You track with Oura, Whoop, and Levels. Now add the one data layer that never changes — your genetics. Understand what’s hardwired vs. what you can optimize.",
               },
               {
                 icon: Dna,
                 audience: "23andMe / AncestryDNA Users",
-                copy: "Your raw DNA file is sitting in a downloads folder doing nothing. Upload it here. In 60 seconds, you\u2019ll know things about your genetics that 23andMe never told you.",
+                copy: "Your raw DNA file is sitting in a downloads folder doing nothing. Upload it here. In 60 seconds, you’ll know things about your genetics that 23andMe never told you.",
               },
             ].map((item, i) => (
               <Reveal key={item.audience} delay={i * 80}>
@@ -974,19 +974,19 @@ export default function Home() {
               {[
                 {
                   quote:
-                    "I asked about 8 different traits in my first session \u2014 caffeine, sleep, bitter taste, lactose. No other tool lets me just type a question and get real research back.",
+                    "I asked about 8 different traits in my first session — caffeine, sleep, bitter taste, lactose. No other tool lets me just type a question and get real research back.",
                   name: "Sarah M.",
                   via: "Reddit",
                 },
                 {
                   quote:
-                    "I ran Promethease on my 23andMe file last year. DNA Trait Analyzer found the same SNPs plus dozens more from GWAS studies that Promethease doesn\u2019t cover.",
+                    "I ran Promethease on my 23andMe file last year. DNA Trait Analyzer found the same SNPs plus dozens more from GWAS studies that Promethease doesn’t cover.",
                   name: "James L.",
                   via: "Product Hunt",
                 },
                 {
                   quote:
-                    "I asked about earwax type \u2014 yes, that\u2019s genetic. Got back three SNPs with citations to the actual studies. No other tool would even attempt that question.",
+                    "I asked about earwax type — yes, that’s genetic. Got back three SNPs with citations to the actual studies. No other tool would even attempt that question.",
                   name: "Maya P.",
                   via: "Twitter",
                 },
@@ -1163,7 +1163,7 @@ export default function Home() {
             <div className="border-t border-border/30">
               <FaqItem
                 question="Is this a medical diagnostic tool?"
-                answer="No. DNA Trait Analyzer is for educational purposes only. We show published genetic associations \u2014 not diagnoses or medical advice. For health decisions, consult your doctor."
+                answer="No. DNA Trait Analyzer is for educational purposes only. We show published genetic associations — not diagnoses or medical advice. For health decisions, consult your doctor."
               />
               <FaqItem
                 question="What DNA file formats do you support?"
@@ -1171,23 +1171,23 @@ export default function Home() {
               />
               <FaqItem
                 question="How is my privacy protected?"
-                answer="Your DNA file is processed in memory and automatically deleted within 1 hour. We never store your raw genetic data. Only your analysis reports are saved \u2014 and only if you have an account."
+                answer="Your DNA file is processed in memory and automatically deleted within 1 hour. We never store your raw genetic data. Only your analysis reports are saved — and only if you have an account."
               />
               <FaqItem
                 question="Why should I use this instead of Promethease or SelfDecode?"
-                answer="Promethease only shows pre-built results from its fixed database \u2014 you can\u2019t ask new questions. SelfDecode charges up to $538/year. We research any trait in real time using the latest GWAS and ClinVar data, provide haplotype-aware analysis, and start with 3 free analyses. Per-trait pricing begins at $0.99."
+                answer="Promethease only shows pre-built results from its fixed database — you can’t ask new questions. SelfDecode charges up to $538/year. We research any trait in real time using the latest GWAS and ClinVar data, provide haplotype-aware analysis, and start with 3 free analyses. Per-trait pricing begins at $0.99."
               />
               <FaqItem
                 question="Can I ask about complex traits like intelligence or personality?"
-                answer="Yes, if the science exists. We\u2019ll find genetic associations and show you the effect sizes (which are usually small for complex traits). We\u2019re transparent about confidence levels\u2014some traits have strong signals, others are preliminary."
+                answer="Yes, if the science exists. We’ll find genetic associations and show you the effect sizes (which are usually small for complex traits). We’re transparent about confidence levels—some traits have strong signals, others are preliminary."
               />
               <FaqItem
                 question="How long does an analysis take?"
-                answer="Most analyses complete in under 60 seconds. For complex traits that require more research, it may take 2\u20133 minutes. You\u2019ll see real-time progress updates as the analysis runs."
+                answer="Most analyses complete in under 60 seconds. For complex traits that require more research, it may take 2–3 minutes. You’ll see real-time progress updates as the analysis runs."
               />
               <FaqItem
-                question="What if a trait isn\u2019t in SNPedia?"
-                answer="We search GWAS Catalog, ClinVar, and published studies. If no genetic association exists for a trait, we\u2019ll tell you honestly (\u201CNo published genetic associations for this trait yet\u201D)."
+                question="What if a trait isn’t in SNPedia?"
+                answer="We search GWAS Catalog, ClinVar, and published studies. If no genetic association exists for a trait, we’ll tell you honestly (“No published genetic associations for this trait yet”)."
               />
               <FaqItem
                 question="Can I export my results?"

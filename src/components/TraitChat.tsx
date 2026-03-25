@@ -102,7 +102,7 @@ export function TraitChat({ result }: TraitChatProps) {
           ...updatedHistory,
           {
             role: "assistant",
-            content: `I wasn\u2019t able to respond. ${errMsg}. Please try again.`,
+            content: `I wasn’t able to respond. ${errMsg}. Please try again.`,
           },
         ]);
       } finally {
