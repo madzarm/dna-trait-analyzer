@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, FlaskConical } from "lucide-react";
+import { Dna, FlaskConical } from "lucide-react";
 import { useDemoStart } from "@/lib/use-demo-start";
 
 export function MobileStickyBar() {
@@ -36,8 +36,8 @@ export function MobileStickyBar() {
         }
         className="flex-1 h-11 rounded-full font-display bg-primary text-primary-foreground cursor-pointer"
       >
-        <Upload className="h-4 w-4 mr-2" />
-        Upload DNA — Free
+        <Dna className="h-4 w-4 mr-2" />
+        Analyze My DNA — Free
       </Button>
       <Button
         variant="outline"
@@ -46,7 +46,7 @@ export function MobileStickyBar() {
         className="h-11 rounded-full border-primary/30 text-primary cursor-pointer"
       >
         <FlaskConical className="h-4 w-4 mr-1" />
-        Demo
+        Live Example
       </Button>
     </div>
   );

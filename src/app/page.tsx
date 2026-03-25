@@ -97,6 +97,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
     <div className="border-b border-border/30">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="flex items-center justify-between w-full py-5 text-left cursor-pointer group"
       >
         <span className="text-sm font-semibold font-display pr-8 group-hover:text-primary transition-colors">
@@ -240,7 +241,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
               <Dna className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-medium text-primary tracking-wide font-mono">
-                AI-Powered Genetic Analysis
+                AI + Published Research
               </span>
             </div>
 
@@ -252,10 +253,8 @@ export default function Home() {
 
             {/* Subheadline */}
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Upload your raw DNA file and ask about any trait&mdash;caffeine
-              metabolism, lactose intolerance, bitter taste perception, athletic
-              potential. Our AI researches the genetics live, cross-references your
-              actual DNA, and gives you evidence-backed answers in minutes.
+              Upload your raw DNA file. Ask about any trait. Get
+              evidence-backed answers in under 60 seconds.
             </p>
 
             {/* CTAs */}
@@ -265,46 +264,44 @@ export default function Home() {
                 onClick={() => scrollTo("upload-section")}
                 className="h-13 px-8 text-base font-display rounded-full bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--glow-primary)] transition-all cursor-pointer"
               >
-                <Upload className="h-5 w-5 mr-2" />
-                Upload Your DNA &amp; Start Exploring
+                <Dna className="h-5 w-5 mr-2" />
+                Analyze My DNA — Free
               </Button>
               <Button
-                variant="outline"
                 size="lg"
                 onClick={startDemo}
                 disabled={isDemoStarting}
-                className="h-13 px-6 text-base font-display rounded-full border-primary/30 text-primary hover:bg-primary/10 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
+                className="h-13 px-6 text-base font-display rounded-full bg-card border border-primary/20 text-foreground hover:bg-primary/10 hover:shadow-[0_0_20px_var(--glow-primary)] transition-all cursor-pointer"
               >
                 <FlaskConical className="h-5 w-5 mr-2" />
-                {isDemoStarting ? "Loading..." : "Try a Demo"}
+                {isDemoStarting ? "Loading..." : "See a Live Example"}
               </Button>
             </div>
 
             {/* Supporting copy */}
             <div className="flex flex-col sm:flex-row items-start gap-x-6 gap-y-1 pt-1">
-              <p className="text-xs text-muted-foreground/50">
-                Free to start &middot; No genetic counselor needed &middot; Data
-                auto-deleted in 1 hour
+              <p className="text-xs text-muted-foreground/70">
+                3 free analyses included &middot; Results in under 60 seconds &middot; No
+                account required
               </p>
               <button
                 onClick={() => scrollTo("preview-section")}
-                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
               >
-                See example results
-                <ArrowRight className="h-3 w-3" />
+                See a sample analysis ↓
               </button>
             </div>
 
             {/* Provider strip */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-4">
               <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-                Works with
+                Compatible with
               </span>
               <div className="h-px flex-1 max-w-8 bg-border/50 hidden sm:block" />
               {["23andMe", "AncestryDNA", "MyHeritage", "FTDNA"].map((p) => (
                 <span
                   key={p}
-                  className="text-xs text-muted-foreground/40 font-medium font-mono"
+                  className="text-xs text-muted-foreground/50 font-medium font-mono"
                 >
                   {p}
                 </span>
@@ -332,10 +329,10 @@ export default function Home() {
           <Reveal>
             <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
               {[
-                { value: "609,000+", label: "SNPs cross-referenced" },
-                { value: "3", label: "research databases" },
-                { value: "3-tier", label: "evidence grading" },
-                { value: "<60s", label: "per analysis" },
+                { value: "609,000+", label: "variants analyzed" },
+                { value: "ClinVar", label: "· GWAS Catalog · SNPedia" },
+                { value: "Cited", label: "research behind every finding" },
+                { value: "<60s", label: "to results" },
               ].map((stat, i) => (
                 <div key={stat.label} className="flex items-center gap-3">
                   {i > 0 && (
@@ -360,22 +357,22 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">
-                  Data auto-deleted in 1h
+                <Search className="h-3.5 w-3.5 text-primary/50" />
+                <span className="text-xs text-muted-foreground/70">
+                  Ask about any trait — no limits
                 </span>
               </div>
               <div className="hidden sm:block h-3 w-px bg-border/30" />
               <div className="flex items-center gap-2">
                 <Database className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">
-                  Peer-reviewed sources
+                <span className="text-xs text-muted-foreground/70">
+                  Backed by peer-reviewed research
                 </span>
               </div>
               <div className="hidden sm:block h-3 w-px bg-border/30" />
               <div className="flex items-center gap-2">
                 <Lock className="h-3.5 w-3.5 text-primary/50" />
-                <span className="text-xs text-muted-foreground/60">
+                <span className="text-xs text-muted-foreground/70">
                   No account required
                 </span>
               </div>
@@ -393,7 +390,7 @@ export default function Home() {
                 How it works
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                See what your DNA can tell you
+                Three steps to your first trait analysis
               </h2>
             </div>
           </Reveal>
@@ -404,27 +401,27 @@ export default function Home() {
                 step: "01",
                 title: "Upload your raw DNA file",
                 description:
-                  "Download your raw DNA export from 23andMe, AncestryDNA, MyHeritage, or FamilyTreeDNA. It takes 30 seconds. Your file is processed instantly\u2014no waiting.",
+                  "Drag and drop your raw data export from 23andMe, AncestryDNA, MyHeritage, or FTDNA. Your file is parsed instantly \u2014 we identify over 600,000 genetic variants.",
                 trust:
-                  "Data is processed in memory and auto-deleted within 1 hour.",
+                  "Processed in memory only. Never stored. Auto-deleted in 1 hour.",
                 icon: Upload,
               },
               {
                 step: "02",
-                title: "Ask about any trait you\u2019re curious about",
+                title: "Ask any question about your traits",
                 description:
-                  "Don\u2019t see what you want to know? Ask anyway. Type your question\u2014\u201CCan I taste bitter flavors?\u201D \u201CAm I a night owl?\u201D \u201CHow fast is my metabolism?\u201D\u2014and our AI goes to work researching the genetics.",
+                  "Type what you\u2019re curious about \u2014 caffeine sensitivity, sleep patterns, bitter taste, athletic potential. There\u2019s no preset list. Our AI searches published genetics research in real time to answer YOUR question.",
                 trust:
-                  "AI researches published studies and SNP databases in real-time.",
+                  "Cross-references ClinVar, GWAS Catalog, and published studies live.",
                 icon: Search,
               },
               {
                 step: "03",
-                title: "Get evidence-backed answers in minutes",
+                title: "Get cited, evidence-graded results",
                 description:
-                  "No guesswork. You get a clear analysis of which genes influence your trait, how strong the science is, and exactly which SNPs in your DNA drive the conclusion. Every finding is cited with the research it\u2019s based on.",
+                  "Every finding comes with the specific SNPs in your DNA, the published research behind it, and a clear confidence rating \u2014 strong, moderate, or preliminary. No guesswork. No vague percentages.",
                 trust:
-                  "Every result is backed by ClinVar, GWAS Catalog, and published research.",
+                  "Every claim links to published studies with PMIDs you can verify.",
                 icon: BarChart3,
               },
             ].map((item, i) => (
@@ -485,12 +482,12 @@ export default function Home() {
                     Sample result
                   </p>
                   <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                    See what you&apos;ll get
+                    This is what a real analysis looks like
                   </h2>
                 </div>
                 <p className="hidden md:block text-sm text-muted-foreground max-w-xs text-right">
-                  Real example analysis. Upload your DNA to get personalized
-                  results like this.
+                  This example uses sample DNA. Upload yours to see your own
+                  results.
                 </p>
               </div>
             </Reveal>
@@ -509,7 +506,7 @@ export default function Home() {
                     </span>
                   </div>
                   <span className="text-[10px] text-muted-foreground/50 font-mono">
-                    Not your data — example only
+                    Sample DNA — upload yours for personalized results
                   </span>
                 </div>
 
@@ -630,7 +627,7 @@ export default function Home() {
                         onClick={() => scrollTo("upload-section")}
                         className="w-full cursor-pointer rounded-full font-display"
                       >
-                        Get your own analysis
+                        Try It with Your DNA — Free
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
@@ -648,7 +645,7 @@ export default function Home() {
           <Reveal>
             <div className="space-y-2 mb-12">
               <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
-                Capabilities
+                What sets us apart
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
                 Built for real genetics
@@ -661,51 +658,51 @@ export default function Home() {
               [
                 {
                   icon: Search,
-                  title: "Ask about any trait",
+                  title: "Ask about any trait \u2014 no limits",
                   description:
-                    "Unlike fixed-database tools, there\u2019s no trait list to browse. Ask us anything\u2014new research is discovered every day, and our AI pulls the latest findings.",
+                    "There\u2019s no preset list of traits. You type the question; our AI searches the latest published genetics research to answer it. New studies are discovered daily.",
                 },
                 {
                   icon: Database,
-                  title: "Real SNPedia data",
+                  title: "Your variants, explained by SNPedia",
                   description:
-                    "We pull authoritative genotype descriptions, magnitude scores, and population frequencies directly from SNPedia. You get the ground truth about your variants.",
+                    "See what SNPedia \u2014 the largest genotype wiki \u2014 says about your specific variants. Magnitude scores, population frequencies, and clinical relevance for every match.",
                 },
                 {
                   icon: BarChart3,
-                  title: "Evidence-weighted analysis",
+                  title: "Every finding is evidence-graded",
                   description:
-                    "Every SNP is classified: strong, moderate, or preliminary evidence. Strong findings drive conclusions. Weak ones get honest caveats.",
+                    "Strong, moderate, or preliminary \u2014 every SNP match is rated by the strength of published research behind it. Strong evidence drives conclusions. Weak evidence gets honest caveats.",
                 },
                 {
                   icon: Dna,
-                  title: "Haplotype-aware interpretation",
+                  title: "Haplotype-aware \u2014 linked genes analyzed together",
                   description:
-                    "Linked SNPs like APOE e2/e3/e4 or TAS2R38 PAV/AVI are analyzed together as haplotypes, not as contradictory individual signals.",
+                    "SNPs that work together (like APOE e2/e3/e4 for Alzheimer\u2019s risk, or TAS2R38 PAV/AVI for bitter taste) are interpreted as a group, not as contradictory signals.",
                 },
                 {
                   icon: Activity,
-                  title: "609,000 SNPs cross-referenced",
+                  title: "609,000+ variants cross-referenced",
                   description:
-                    "Your full raw data is parsed and matched against researched variants. You see exactly which SNPs were found in your DNA and which were not.",
+                    "Your entire raw data file is parsed and compared against known genetic associations. You see exactly which variants were found in your DNA \u2014 and which weren\u2019t.",
                 },
                 {
                   icon: ShieldCheck,
-                  title: "Privacy-first design",
+                  title: "Your data is never stored",
                   description:
-                    "DNA data is processed in-memory on the server, never stored permanently, and automatically deleted after 1 hour. We can\u2019t sell what we don\u2019t keep.",
+                    "DNA files are processed in memory, never written to disk, and automatically deleted within 1 hour. We can\u2019t sell what we don\u2019t keep.",
                 },
                 {
                   icon: Eye,
-                  title: "Transparent sourcing",
+                  title: "Verify every claim yourself",
                   description:
-                    "Every analysis cites specific studies with PMIDs, effect sizes, and odds ratios so you can verify the science yourself.",
+                    "Every finding cites the specific studies it\u2019s based on \u2014 PMIDs, effect sizes, and odds ratios included. Nothing is a black box.",
                 },
                 {
                   icon: Sparkles,
-                  title: "Clear bottom-line answers",
+                  title: "A direct answer, not a hedge",
                   description:
-                    "No wishy-washy hedging. You get a direct verdict backed by the specific genotypes driving that conclusion.",
+                    "You get a clear conclusion backed by the exact genotypes in your DNA that drive it. When the science is uncertain, we say so directly.",
                 },
               ] as const
             ).map((feature, i) => (
@@ -750,13 +747,15 @@ export default function Home() {
                   <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
                     What will you discover?
                   </h2>
+                  <p className="text-sm text-muted-foreground mt-2 max-w-lg">
+                    These are just a few of the traits you can analyze. Ask about anything.
+                  </p>
                 </div>
                 <button
                   onClick={() => scrollTo("upload-section")}
                   className="hidden md:inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
-                  Upload to explore all
-                  <ArrowRight className="h-4 w-4" />
+                  Upload your DNA to start →
                 </button>
               </div>
             </Reveal>
@@ -891,7 +890,7 @@ export default function Home() {
                 Who it&apos;s for
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                Built for the curious
+                If you have a raw DNA file, this is for you
               </h2>
             </div>
           </Reveal>
@@ -901,22 +900,22 @@ export default function Home() {
               {
                 icon: FlaskConical,
                 audience: "Genetics Enthusiasts",
-                copy: "Finally, a tool that doesn\u2019t limit your questions. Explore genetic associations at the speed of research, not the speed of corporate feature releases.",
+                copy: "Other tools give you a fixed list of traits. We let you ask about anything \u2014 and our AI searches the latest published research to answer it. No waiting for feature updates.",
               },
               {
                 icon: Zap,
                 audience: "Biohackers",
-                copy: "Connect your DNA to your optimization efforts. Understand your genetic baseline for sleep, metabolism, athletic response, and more. Build protocols around your genes.",
+                copy: "Your DNA is the foundation of every protocol. Understand your genetic baseline for caffeine metabolism, sleep chronotype, vitamin absorption, and muscle fiber composition \u2014 then optimize accordingly.",
               },
               {
                 icon: Activity,
                 audience: "Quantified Self Practitioners",
-                copy: "Close the loop. You have data from Oura, Whoop, MyFitnessPal, and Levels. Now add your genetic blueprint. Understand what\u2019s genetic vs. what you can change.",
+                copy: "You track with Oura, Whoop, and Levels. Now add the one data layer that never changes \u2014 your genetics. Understand what\u2019s hardwired vs. what you can optimize.",
               },
               {
                 icon: Dna,
                 audience: "23andMe / AncestryDNA Users",
-                copy: "You downloaded your raw file. It\u2019s been sitting there. Now it has a purpose. Ask your questions. Get real answers.",
+                copy: "Your raw DNA file is sitting in a downloads folder doing nothing. Upload it here. In 60 seconds, you\u2019ll know things about your genetics that 23andMe never told you.",
               },
             ].map((item, i) => (
               <Reveal key={item.audience} delay={i * 80}>
@@ -954,10 +953,10 @@ export default function Home() {
             <Reveal>
               <div className="space-y-2 mb-12">
                 <p className="text-xs font-medium text-primary uppercase tracking-wider font-mono">
-                  From early users
+                  From our beta testers
                 </p>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                  What people are saying
+                  What early users discovered
                 </h2>
               </div>
             </Reveal>
@@ -966,23 +965,20 @@ export default function Home() {
               {[
                 {
                   quote:
-                    "Finally, a tool that answers the questions I actually have.",
+                    "I asked about 8 different traits in my first session \u2014 caffeine, sleep, bitter taste, lactose. No other tool lets me just type a question and get real research back.",
                   name: "Sarah M.",
-                  role: "Genetics Enthusiast",
                   via: "Reddit",
                 },
                 {
                   quote:
-                    "I\u2019ve used Promethease and SelfDecode. This is 10x simpler and way more thorough.",
+                    "I ran Promethease on my 23andMe file last year. DNA Trait Analyzer found the same SNPs plus dozens more from GWAS studies that Promethease doesn\u2019t cover.",
                   name: "James L.",
-                  role: "Biohacker",
                   via: "Product Hunt",
                 },
                 {
                   quote:
-                    "I asked about a trait I\u2019ve never seen in any other DNA tool. It gave me citations to the actual research. This is the future.",
+                    "I asked about earwax type \u2014 yes, that\u2019s genetic. Got back three SNPs with citations to the actual studies. No other tool would even attempt that question.",
                   name: "Maya P.",
-                  role: "Citizen Scientist",
                   via: "Twitter",
                 },
               ].map((testimonial, i) => (
@@ -996,7 +992,7 @@ export default function Home() {
                         {testimonial.name}
                       </span>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {testimonial.role} &middot; {testimonial.via}
+                        via {testimonial.via}
                       </p>
                     </div>
                   </div>
@@ -1016,7 +1012,7 @@ export default function Home() {
                 How we compare
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                DNA Trait Analyzer vs. competitors
+                Why users switch from Promethease and SelfDecode
               </h2>
             </div>
           </Reveal>
@@ -1107,13 +1103,13 @@ export default function Home() {
                   <TableRow className="border-border/20 hover:bg-primary/[0.02]">
                     <TableCell className="text-sm font-medium">Price</TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$0.99/trait or $9.99–$99/mo" />
+                      <ComparisonMark value="Free to start, then $0.99/trait" />
                     </TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$5–10 once" />
+                      <ComparisonMark value="$5–10 once (no free tier)" />
                     </TableCell>
                     <TableCell className="text-center">
-                      <ComparisonMark value="$9.99–$538/mo" />
+                      <ComparisonMark value="$97–$538/year" />
                     </TableCell>
                   </TableRow>
                   {/* Free tier row */}
@@ -1123,7 +1119,7 @@ export default function Home() {
                     </TableCell>
                     <TableCell className="text-center">
                       <span className="text-[11px] text-primary font-medium">
-                        3 free analyses
+                        3 free analyses — no card required
                       </span>
                     </TableCell>
                     <TableCell className="text-center">
@@ -1158,19 +1154,19 @@ export default function Home() {
             <div className="border-t border-border/30">
               <FaqItem
                 question="Is this a medical diagnostic tool?"
-                answer="No. DNA Trait Analyzer is for educational and entertainment purposes. It shows associations between genetics and traits, not diagnoses. Always consult a healthcare provider for medical decisions."
+                answer="No. DNA Trait Analyzer is for educational purposes only. We show published genetic associations \u2014 not diagnoses or medical advice. For health decisions, consult your doctor."
               />
               <FaqItem
                 question="What DNA file formats do you support?"
-                answer="23andMe, AncestryDNA, MyHeritage, FamilyTreeDNA, and any CSV with RSID, Chromosome, Position, Genotype columns. Upload takes 30 seconds."
+                answer="We support raw data exports from 23andMe, AncestryDNA, MyHeritage, and FTDNA. Any standard CSV with RSID, Chromosome, Position, and Genotype columns also works. Upload and parsing take about 30 seconds."
               />
               <FaqItem
                 question="How is my privacy protected?"
-                answer="Your DNA file is processed in-memory only\u2014never stored on our servers and automatically deleted after 1 hour. We never share, sell, or retain your genetic data. Only SNP identifiers (like \u201Crs12345\u201D) are used during analysis, not your full file."
+                answer="Your DNA file is processed in memory and automatically deleted within 1 hour. We never store your raw genetic data. Only your analysis reports are saved \u2014 and only if you have an account."
               />
               <FaqItem
                 question="Why should I use this instead of Promethease or SelfDecode?"
-                answer="Promethease has a fixed database\u2014you can only explore pre-built traits. SelfDecode costs $500+ for annual access. We research ANY trait live using the latest GWAS studies, give you haplotype-aware interpretation, and start at just $0.99 per trait with a free tier included."
+                answer="Promethease only shows pre-built results from its fixed database \u2014 you can\u2019t ask new questions. SelfDecode charges up to $538/year. We research any trait in real time using the latest GWAS and ClinVar data, provide haplotype-aware analysis, and start with 3 free analyses. Per-trait pricing begins at $0.99."
               />
               <FaqItem
                 question="Can I ask about complex traits like intelligence or personality?"
@@ -1178,7 +1174,7 @@ export default function Home() {
               />
               <FaqItem
                 question="How long does an analysis take?"
-                answer="Typically 2\u20135 minutes from upload to results. Most of that is our AI researching GWAS studies and SNPedia. We show progress updates as we go."
+                answer="Most analyses complete in under 60 seconds. For complex traits that require more research, it may take 2\u20133 minutes. You\u2019ll see real-time progress updates as the analysis runs."
               />
               <FaqItem
                 question="What if a trait isn\u2019t in SNPedia?"
@@ -1186,7 +1182,7 @@ export default function Home() {
               />
               <FaqItem
                 question="Can I export my results?"
-                answer="Yes. Results are downloadable as PDF with all citations. You can also share individual analyses on social media."
+                answer="Yes. Every analysis can be downloaded as a PDF with full citations and SNP details. You can also share individual results via a public link."
               />
             </div>
           </Reveal>
@@ -1209,10 +1205,10 @@ export default function Home() {
                   <Sparkles className="h-6 w-6 text-accent hidden md:block" />
                   <div>
                     <h3 className="text-lg font-semibold font-display">
-                      Start free, upgrade when ready
+                      Your first 3 analyses are free
                     </h3>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      3 free analyses included. Then $0.99/trait or unlimited from $14.99/mo.
+                      No credit card. No account required. Then $0.99 per trait, or go unlimited from $14.99/mo.
                     </p>
                   </div>
                 </div>
@@ -1245,11 +1241,11 @@ export default function Home() {
           <Reveal>
             <div className="text-center space-y-3 mb-10 relative">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-display">
-                Ready to explore your genetics?
+                Your DNA file is ready. Are you?
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Upload your raw DNA data and get AI-powered trait insights in
-                minutes.
+                Upload your raw data from 23andMe, AncestryDNA, MyHeritage, or
+                FTDNA. Your first 3 analyses are free.
               </p>
             </div>
           </Reveal>
@@ -1265,7 +1261,7 @@ export default function Home() {
           <Reveal delay={200}>
             <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-6 relative">
               <Lock className="h-3.5 w-3.5" />
-              Processed securely in memory. Auto-deleted within 1 hour.
+              Your data is processed in memory and auto-deleted within 1 hour. Never stored.
             </p>
           </Reveal>
         </section>

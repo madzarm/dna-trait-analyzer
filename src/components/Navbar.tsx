@@ -121,9 +121,9 @@ export function Navbar() {
                   Sign In
                 </Button>
               </Link>
-              <Link href="/auth/signup">
+              <Link href="/analyze">
                 <Button size="sm" className="h-8 px-4 text-xs font-display rounded-full">
-                  Get Started
+                  Analyze DNA
                 </Button>
               </Link>
             </>
@@ -215,13 +215,13 @@ export function Navbar() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/auth/signup" className="flex-1">
+                <Link href="/analyze" className="flex-1">
                   <Button
                     size="sm"
                     className="w-full rounded-full font-display"
                     onClick={() => setMobileOpen(false)}
                   >
-                    Get Started
+                    Analyze DNA
                   </Button>
                 </Link>
               </div>

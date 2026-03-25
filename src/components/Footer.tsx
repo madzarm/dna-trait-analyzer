@@ -25,8 +25,8 @@ export function Footer() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              AI-powered genetic trait analysis backed by published research.
-              For educational purposes only.
+              Discover what your DNA says about you — powered by AI and
+              published genetics research. For educational purposes only.
             </p>
             <p className="text-xs text-muted-foreground/60">
               &copy; {new Date().getFullYear()} DNA Trait Analyzer
@@ -89,9 +89,9 @@ export function Footer() {
             </h4>
             <div className="flex flex-col gap-3">
               {[
-                { icon: ShieldCheck, text: "Data auto-deleted in 1 hour" },
-                { icon: Database, text: "ClinVar & GWAS Catalog sources" },
-                { icon: BookOpen, text: "Peer-reviewed citations" },
+                { icon: ShieldCheck, text: "Evidence-graded results" },
+                { icon: Database, text: "ClinVar & GWAS Catalog data" },
+                { icon: BookOpen, text: "Your data is never stored" },
               ].map((item) => (
                 <div key={item.text} className="flex items-center gap-2">
                   <item.icon className="h-3.5 w-3.5 text-primary/60 shrink-0" />
